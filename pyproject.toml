@@ -1,0 +1,33 @@
+[project]
+name = "ihunt"
+version = "0.0.0"
+description = "Information gathering tool powered by AI"
+authors = [
+    { name = "hdks", email = "hdks.bug@gmail.com" }
+]
+dependencies = [
+    "click>=8.1.7",
+    "transformers>=4.43.4",
+    "python-dotenv>=1.0.1",
+    "torch>=2.4.0",
+    "pyyaml>=6.0.2",
+]
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[project.scripts]
+"ihunt" = "ihunt:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ihunt"]
