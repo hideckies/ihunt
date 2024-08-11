@@ -1,3 +1,5 @@
+# Docs: https://hackertarget.com/ip-tools/
+
 import requests
 from threading import Lock
 from ..models import Ihunt

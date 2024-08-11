@@ -47,6 +47,8 @@ def gather_domain(ihunt: Ihunt) -> None:
         thread = threading.Thread(target=req_hunter_domain, args=(ihunt, lock))
         threads.append(thread)
         thread.start()
+    else:
+        echo("[x] Hunter API key is not set.", ihunt.verbose)
 
     thread = threading.Thread(target=req_subdomaincenter_domain, args=(ihunt, lock))
     threads.append(thread)
@@ -81,6 +83,8 @@ def gather_email(ihunt: Ihunt) -> None:
         thread = threading.Thread(target=req_hunter_email, args=(ihunt, lock))
         threads.append(thread)
         thread.start()
+    else:
+        echo("[x] Hunter API key is not set.", ihunt.verbose)
 
     for thread in threads:
         thread.join()
@@ -120,15 +124,21 @@ def gather_ip(ihunt: Ihunt) -> None:
 
 
 def gather_org(ihunt: Ihunt) -> None:
-    pass
+    threads = []
+
+    for thread in threads:
+        thread.join()
 
 
 def gather_person(ihunt: Ihunt) -> None:
     threads = []
 
-    thread = threading.Thread(target=req_genderize_person, args=(ihunt, lock))
-    threads.append(thread)
-    thread.start()
+    if ihunt.apikeys.huggingface:
+        thread = threading.Thread(target=req_genderize_person, args=(ihunt, lock))
+        threads.append(thread)
+        thread.start()
+    else:
+        echo("[x] Hugging Face API key is not set.", ihunt.verbose)
 
     for thread in threads:
         thread.join()
@@ -141,11 +151,15 @@ def gather_url(ihunt: Ihunt) -> None:
         thread = threading.Thread(target=req_urldna_url, args=(ihunt, lock))
         threads.append(thread)
         thread.start()
+    else:
+        echo("[x] urlDNA API key is not set.", ihunt.verbose)
 
     if ihunt.apikeys.virustotal:
         thread = threading.Thread(target=req_virustotal_url, args=(ihunt, lock))
         threads.append(thread)
         thread.start()
+    else:
+        echo("[x] VirusTotal API key is not set.", ihunt.verbose)
 
     for thread in threads:
         thread.join()

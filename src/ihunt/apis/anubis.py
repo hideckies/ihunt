@@ -1,3 +1,5 @@
+# Docs: https://github.com/jonluca/anubis
+
 import requests
 from threading import Lock
 from ..models import Ihunt

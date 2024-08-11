@@ -8,6 +8,7 @@ from pprint import PrettyPrinter
 from typing import Any
 import yaml
 from .stdout import echo
+from .utils import remove_null_values_in_dict
 
 
 class QueryType(Enum):
@@ -217,7 +218,6 @@ class DataOrg:
     employees: list[str] | None = None
     services: list[str] | None = None
     parent_organization: str | None = None
-
     
 
 @dataclass
@@ -296,7 +296,7 @@ def init_data(query: Query) -> DataDomain | DataEmail | DataIp | DataOrg | DataP
     elif query.type == QueryType.IP:
         return DataIp(ip=query.value)
     elif query.type == QueryType.ORG:
-        return DataOrg(org=query.value)
+        return DataOrg(organization=query.value)
     elif query.type == QueryType.PERSON:
         return DataPerson(person=query.value)
     elif query.type == QueryType.URL:
@@ -338,21 +338,26 @@ class Ihunt:
     def print_data(self) -> None:
         echo("[*] Results:\n", self.verbose)
 
+        data = remove_null_values_in_dict(asdict(self.data))
+
         if self.format == "json":
-            click.echo(json.dumps(asdict(self.data), indent=4))
+            click.echo(json.dumps(data, indent=4))
         elif self.format == "pretty":
-            click.echo(PrettyPrinter(indent=4).pformat(asdict(self.data)))
+            click.echo(PrettyPrinter(indent=4).pformat(data))
         elif self.format == "yaml":
-            click.echo(yaml.dump(asdict(self.data), default_flow_style=False, indent=4))
+            click.echo(yaml.dump(data, default_flow_style=False, indent=4))
         
     def write(self) -> None:
         echo(f"[*] Writing results to {self.output}...", self.verbose)
+
+        data = remove_null_values_in_dict(asdict(self.data))
+
         with open(self.output, 'w') as f:
             output_ext = os.path.splitext(self.output)
             if output_ext[1] == ".json":
-                f.write(json.dumps(asdict(self.data), indent=4))
+                f.write(json.dumps(data, indent=4))
             elif output_ext[1] == ".yaml" or output_ext[1] == ".yml":
-                f.write(yaml.dump(asdict(self.data), default_flow_style=False, indent=4))
+                f.write(yaml.dump(data, default_flow_style=False, indent=4))
             else:
-                f.write(PrettyPrinter(indent=4).pformat(asdict(self.data)))
+                f.write(PrettyPrinter(indent=4).pformat(data))
 

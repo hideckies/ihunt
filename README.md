@@ -1,6 +1,6 @@
 # ihunt
 
-Information Hunting tool that collects information using OSINT and AI, while remaining undetected by the target.
+Information gathering tool that collects information using OSINT and AI, while remaining undetected by the target.
 
 ## Installation
 
@@ -39,16 +39,19 @@ ihunt example.com
 # Research email address
 ihunt user@example.com
 
+# Research hash (under development & not yet available)
+ihunt ed076287532e86365e841e92bfc50d8c
+
 # Research IP address
 ihunt 8.8.8.8
 
 # Research URL
 ihunt https://example.com
 
-# Research organization
+# Research organization (under development & not yet available)
 ihunt Google
 
-# Research person
+# Research person (under development)
 ihunt "Elon Musk"
 ```
 

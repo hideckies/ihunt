@@ -1,3 +1,5 @@
+# Docs: https://otx.alienvault.com/api
+
 import requests
 from threading import Lock
 from ..models import Ihunt

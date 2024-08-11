@@ -1,3 +1,5 @@
+# Docs: https://github.com/ARPSyndicate/docs?tab=readme-ov-file#subdomain-center
+
 import requests
 from threading import Lock
 from ..models import Ihunt
