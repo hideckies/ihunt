@@ -2,6 +2,8 @@ import threading
 from .apis.abuseipdb import req_abuseipdb_ip
 from .apis.alienvault import req_alienvalut_domain
 from .apis.anubis import req_anubis_domain
+from .apis.duckduckgo import req_duckduckgo_email, req_duckduckgo_org, req_duckduckgo_person, req_duckduckgo_url
+from .apis.emailrep import req_emailrep_email
 from .apis.eva import req_eva_email
 from .apis.hackertarget import req_hackertarget_domain
 from .apis.hunter import req_hunter_domain, req_hunter_email
@@ -14,7 +16,8 @@ from .apis.virustotal import req_virustotal_domain, req_virustotal_ip, req_virus
 from .apis.whoisxml import req_whoisxml_domain
 from .cmds.dig import exec_dig_domain
 from .cmds.whois import exec_whois_domain, exec_whois_ip
-from .models import QueryType, Ihunt
+from .querytype import QueryType
+from .models import Ihunt
 from .stdout import echo
 
 lock = threading.Lock()
@@ -68,12 +71,20 @@ def gather_domain(ihunt: Ihunt) -> None:
     else:
         echo("[x] WhoisXML API key is not set.", ihunt.verbose)
 
+    # ------------------------------------------------------------------------------
+    # Execute AI-related APIs lastly from the perspective of accuracy
+    # ------------------------------------------------------------------------------
+
     for thread in threads:
         thread.join()
 
 
 def gather_email(ihunt: Ihunt) -> None:
     threads = []
+
+    thread = threading.Thread(target=req_emailrep_email, args=(ihunt, lock))
+    threads.append(thread)
+    thread.start()
 
     thread = threading.Thread(target=req_eva_email, args=(ihunt, lock))
     threads.append(thread)
@@ -85,6 +96,28 @@ def gather_email(ihunt: Ihunt) -> None:
         thread.start()
     else:
         echo("[x] Hunter API key is not set.", ihunt.verbose)
+
+    # ------------------------------------------------------------------------------
+    # Execute AI-related APIs lastly from the perspective of accuracy
+    # ------------------------------------------------------------------------------
+
+    thread = threading.Thread(target=req_duckduckgo_email, args=(ihunt, lock))
+    threads.append(thread)
+    thread.start()
+
+    for thread in threads:
+        thread.join()
+
+
+def gather_file(ihunt: Ihunt) -> None:
+    threads = []
+
+    for thread in threads:
+        thread.join()
+
+
+def gather_hash(ihunt: Ihunt) -> None:
+    threads = []
 
     for thread in threads:
         thread.join()
@@ -119,12 +152,24 @@ def gather_ip(ihunt: Ihunt) -> None:
     else:
         echo("[x] VirusTotal API key is not set.", ihunt.verbose)
 
+    # ------------------------------------------------------------------------------
+    # Execute AI-related APIs lastly from the perspective of accuracy
+    # ------------------------------------------------------------------------------
+
     for thread in threads:
         thread.join()
 
 
 def gather_org(ihunt: Ihunt) -> None:
     threads = []
+
+    # ------------------------------------------------------------------------------
+    # Execute AI-related APIs lastly from the perspective of accuracy
+    # ------------------------------------------------------------------------------
+
+    thread = threading.Thread(target=req_duckduckgo_org, args=(ihunt, lock))
+    threads.append(thread)
+    thread.start()
 
     for thread in threads:
         thread.join()
@@ -133,12 +178,27 @@ def gather_org(ihunt: Ihunt) -> None:
 def gather_person(ihunt: Ihunt) -> None:
     threads = []
 
+    # ------------------------------------------------------------------------------
+    # Execute AI-related APIs lastly from the perspective of accuracy
+    # ------------------------------------------------------------------------------
+
+    thread = threading.Thread(target=req_duckduckgo_person, args=(ihunt, lock))
+    threads.append(thread)
+    thread.start()
+
     if ihunt.apikeys.huggingface:
         thread = threading.Thread(target=req_genderize_person, args=(ihunt, lock))
         threads.append(thread)
         thread.start()
     else:
         echo("[x] Hugging Face API key is not set.", ihunt.verbose)
+
+    for thread in threads:
+        thread.join()
+
+
+def gather_tel(ihunt: Ihunt) -> None:
+    threads = []
 
     for thread in threads:
         thread.join()
@@ -161,6 +221,14 @@ def gather_url(ihunt: Ihunt) -> None:
     else:
         echo("[x] VirusTotal API key is not set.", ihunt.verbose)
 
+    # ------------------------------------------------------------------------------
+    # Execute AI-related APIs lastly from the perspective of accuracy
+    # ------------------------------------------------------------------------------
+
+    thread = threading.Thread(target=req_duckduckgo_url, args=(ihunt, lock))
+    threads.append(thread)
+    thread.start()
+
     for thread in threads:
         thread.join()
 
@@ -170,10 +238,6 @@ def gather_url(ihunt: Ihunt) -> None:
         # Find vulnerabilities of website via HTML (DOM) using LLM
         # ...
         pass
-
-
-def gather_misc(ihunt: Ihunt) -> None:
-    pass
 
 
 def gather(ihunt: Ihunt) -> None:

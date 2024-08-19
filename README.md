@@ -9,7 +9,6 @@ Information gathering tool that collects information using OSINT and AI, while r
 The most easiest way is to install the Python package with `pip`.
 
 ```sh
-# from PyPI
 pip install ihunt
 ihunt --help
 ```
@@ -39,20 +38,23 @@ ihunt example.com
 # Research email address
 ihunt user@example.com
 
+# Research file (under development & not yet available)
+ihunt ./example.exe
+
 # Research hash (under development & not yet available)
 ihunt ed076287532e86365e841e92bfc50d8c
 
 # Research IP address
 ihunt 8.8.8.8
 
-# Research URL
-ihunt https://example.com
-
-# Research organization (under development & not yet available)
+# Research organization
 ihunt Google
 
-# Research person (under development)
+# Research person
 ihunt "Elon Musk"
+
+# Research URL
+ihunt https://example.com
 ```
 
 ### Using API Keys
@@ -69,4 +71,19 @@ Alternatively, we can directly set api keys to environment variables via command
 ```sh
 export IHUNT_APIKEY_ABUSEIPDB=xxxxxxxxxxxxxxx...
 ihunt 8.8.8.8
+```
+
+### Output Format
+
+Using `-o/--output` option, the result will be saved to a specified file. The ihunt detects the output format from the extension of the file path as below:
+
+```sh
+# JSON
+ihunt -o output.json example.com
+
+# YAML
+ihunt -o output.yaml example.com
+
+# Others (pretty print)
+ihunt -o output.txt example.com
 ```

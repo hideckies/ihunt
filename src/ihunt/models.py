@@ -1,66 +1,21 @@
 from __future__ import annotations
 import click
 from dataclasses import asdict, dataclass
-from enum import Enum
 import json
 import os
 from pprint import PrettyPrinter
 from typing import Any
 import yaml
+from .querytype import Query, QueryType
 from .stdout import echo
 from .utils import remove_null_values_in_dict
-
-
-class QueryType(Enum):
-    DOMAIN  = 1
-    EMAIL   = 2
-    IP      = 3
-    URL     = 4
-    # Misc types
-    ORG     = 5
-    PERSON  = 6
-    MISC    = 7
-    UNKNOWN = 8
-
-
-@dataclass
-class Query:
-    value: str
-    type: QueryType
-
-    def type_str(self) -> str:
-        if self.type == QueryType.DOMAIN:
-            return "Domain"
-        elif self.type == QueryType.EMAIL:
-            return "Email"
-        elif self.type == QueryType.IP:
-            return "IP"
-        elif self.type == QueryType.URL:
-            return "URL"
-        elif self.type == QueryType.ORG:
-            return "Organization"
-        elif self.type == QueryType.PERSON:
-            return "Person"
-        elif self.type == QueryType.MISC:
-            return "Misc"
-        elif self.type == QueryType.UNKNOWN:
-            return "Unknown"
-        
-
-class ApiKeyEnvs(Enum):
-    ABUSEIPDB = "IHUNT_APIKEY_ABUSEIPDB"
-    HUGGINGFACE = "IHUNT_APIKEY_HUGGINGFACE"
-    HUNTER = "IHUNT_APIKEY_HUNTER"
-    SHODAN = "IHUNT_APIKEY_SHODAN"
-    URLDNA = "IHUNT_APIKEY_URLDNA"
-    URLSCAN = "IHUNT_APIKEY_URLSCAN"
-    VIRUSTOTAL = "IHUNT_APIKEY_VIRUSTOTAL"
-    WHOISXML = "IHUNT_APIKEY_WHOISXML"
         
 
 @dataclass
 class ApiKeys:
     abuseipdb: str | None = None
+    emailrep: str | None = None
+    haveibeenpwned: str | None = None
     huggingface: str | None = None
     hunter: str | None = None
     shodan: str | None = None
@@ -138,11 +93,18 @@ class DataDomain:
 class DataEmail:
     email: str | None = None
     domain: str | None = None
+    domain_exists: bool | None = None
+    domain_reputation: str | None = None
+    domain_new: bool | None = None
     provider_name: str | None = None
+    free_provider: bool | None = None
     creation_date: str | None = None
     owner_name: str | None = None
     gibberish: bool | None = None
     disposable: bool | None = None
+    deliverable: bool | None = None
+    spoofable: bool | None = None
+    dmarc_enforced: bool | None = None
     webmail: bool | None = None
     mx_records: bool | None = None
     smtp_server: bool | None = None
@@ -150,6 +112,23 @@ class DataEmail:
     accept_all: bool | None = None
     block: bool | None = None
     spam: bool | None = None
+    suspicious: bool | None = None
+    blacklisted: bool | None = None
+    malicious_activity: bool | None = None
+    malicious_activity_recent: bool | None = None
+    credentials_leaked: bool | None = None
+    credentials_leaked_recent: bool | None = None
+    data_breach: bool | None = None
+
+
+@dataclass
+class DataFile:
+    file: str | None = None
+
+
+@dataclass
+class DataHash:
+    hash: str | None = None
 
 
 @dataclass
@@ -223,6 +202,7 @@ class DataOrg:
 @dataclass
 class DataPerson:
     person: str | None = None
+    full_name: str | None = None
     aliases: list[str] | None = None
     age: int | None = None
     gender: str | None = None
@@ -250,6 +230,11 @@ class DataPerson:
     height: str | None = None
     weight: str | None = None
     personality: str | None = None
+
+
+@dataclass
+class DataTel:
+    tel: str | None = None
 
 
 @dataclass
@@ -283,44 +268,51 @@ class DataUrl:
     virustotal_threat_names: list[str] | None = None
 
 
-@dataclass
-class DataMisc:
-    entity: str | None = None
-
-
-def init_data(query: Query) -> DataDomain | DataEmail | DataIp | DataOrg | DataPerson | DataUrl:
+def init_data(query: Query) -> Any:
     if query.type == QueryType.DOMAIN:
         return DataDomain(domain=query.value)
     elif query.type == QueryType.EMAIL:
         return DataEmail(email=query.value)
+    elif query.type == QueryType.FILE:
+        return DataFile(file=query.value)
+    elif query.type == QueryType.HASH:
+        return DataFile(hash=query.value)
     elif query.type == QueryType.IP:
         return DataIp(ip=query.value)
     elif query.type == QueryType.ORG:
         return DataOrg(organization=query.value)
     elif query.type == QueryType.PERSON:
         return DataPerson(person=query.value)
+    elif query.type == QueryType.TEL:
+        return DataTel(tel=query.value)
     elif query.type == QueryType.URL:
         return DataUrl(url=query.value)
-    elif query.type == QueryType.MISC:
-        return DataMisc(entity=query.value)
-
+    
 
 class Ihunt:
-    def __init__(self, query: Query, depth: int, format: str, output: str, verbose: bool) -> None:
+    def __init__(
+        self,
+        query: Query,
+        format: str,
+        output: str,
+        user_agent: str,
+        verbose: bool,
+    ) -> None:
         self.query: Query = query
-        self.depth: int = depth
         self.format: str = format
         self.output: str = output
+        self.user_agent: str = user_agent
         self.verbose: bool = verbose
         self.apikeys = ApiKeys(
-            abuseipdb=os.getenv(ApiKeyEnvs.ABUSEIPDB.value),
-            huggingface=os.getenv(ApiKeyEnvs.HUGGINGFACE.value),
-            hunter=os.getenv(ApiKeyEnvs.HUNTER.value),
-            shodan=os.getenv(ApiKeyEnvs.SHODAN.value),
-            urldna=os.getenv(ApiKeyEnvs.URLDNA.value),
-            urlscan=os.getenv(ApiKeyEnvs.URLSCAN.value),
-            virustotal=os.getenv(ApiKeyEnvs.VIRUSTOTAL.value),
-            whoisxml=os.getenv(ApiKeyEnvs.WHOISXML.value),
+            abuseipdb=os.getenv("IHUNT_APIKEY_ABUSEIPDB"),
+            emailrep=os.getenv("IHUNT_APIKEY_EMAILREP"),
+            huggingface=os.getenv("IHUNT_APIKEY_HUGGINGFACE"),
+            hunter=os.getenv("IHUNT_APIKEY_HUNTER"),
+            shodan=os.getenv("IHUNT_APIKEY_SHODAN"),
+            urldna=os.getenv("IHUNT_APIKEY_URLDNA"),
+            urlscan=os.getenv("IHUNT_APIKEY_URLSCAN"),
+            virustotal=os.getenv("IHUNT_APIKEY_VIRUSTOTAL"),
+            whoisxml=os.getenv("IHUNT_APIKEY_WHOISXML"),
         )
         self.data = init_data(query)
 
@@ -328,7 +320,6 @@ class Ihunt:
         options = f"""
 + Query         : {self.query.value}
 + Query Type    : {self.query.type_str()}
-+ Depth         : {self.depth}
 + Format        : {self.format}
 + Output        : {self.output}
 + Verbose       : {self.verbose}

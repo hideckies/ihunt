@@ -3,27 +3,20 @@ from dotenv import load_dotenv
 import os
 import re
 from .gather import gather
-from .models import Query, QueryType, Ihunt
-from .querytype import identify_querytype
-
-
-def print_version(ctx, param, value) -> None:
-    if not value or ctx.resilient_parsing:
-        return
-    version = "0.0.0"
-    click.echo(f"ihunt v{version}")
-    ctx.exit()
+from .models import Ihunt
+from .querytype import identify_querytype, Query, QueryType
+from .version import print_version
 
 
 @click.command()
 @click.option('-c', '--config', help='Config file.')
-@click.option('-d', '--depth', type=click.IntRange(1, 3), default=1, help='Depth of information gathering.')
 @click.option('-f', '--format', type=click.Choice(['json', 'pretty', 'yaml']), default='json', help='Print format.')
 @click.option('-o', '--output', help='Write results to the output file path.')
+@click.option('-u', '--user-agent', default='ihunt', help='Custome User-Agent used when fetching APIs')
 @click.option('-v', '--verbose', is_flag=True, help='Verbose output.')
 @click.option('--version', is_flag=True, callback=print_version, expose_value=False, is_eager=True, help='The version of the Ihunt.')
 @click.argument('query')
-def run(config: str, depth: int, format: str, output: str, verbose: bool, query: str) -> None:
+def run(config: str, format: str, output: str, user_agent: str, verbose: bool, query: str) -> None:
     if config is not None:
         # Load configurations from file.
         if os.path.exists(config) is False:
@@ -34,10 +27,10 @@ def run(config: str, depth: int, format: str, output: str, verbose: bool, query:
     query = re.sub(r'\s+', ' ', query).strip()
 
     ihunt = Ihunt(
-        query=Query(value=query, type=identify_querytype(query, verbose)),
-        depth=depth,
+        query=Query(value=query, verbose=verbose),
         format=format,
         output=output,
+        user_agent=user_agent,
         verbose=verbose,
     )
     ihunt.print_options()

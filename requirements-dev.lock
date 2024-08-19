@@ -15,6 +15,9 @@ certifi==2024.7.4
 charset-normalizer==3.3.2
     # via requests
 click==8.1.7
+    # via duckduckgo-search
+    # via ihunt
+duckduckgo-search==6.2.9
     # via ihunt
 filelock==3.15.4
     # via huggingface-hub
@@ -70,6 +73,8 @@ nvidia-nvtx-cu12==12.1.105
 packaging==24.1
     # via huggingface-hub
     # via transformers
+primp==0.6.0
+    # via duckduckgo-search
 python-dotenv==1.0.1
     # via ihunt
 pyyaml==6.0.2
