@@ -1,6 +1,6 @@
 [project]
 name = "ihunt"
-version = "0.1.0"
+version = "0.1.1"
 description = "Information gathering tool."
 authors = [
     { name = "hdks", email = "hdks.bug@gmail.com" }

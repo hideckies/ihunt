@@ -1,3 +1,5 @@
+# Docs: https://pypi.org/project/duckduckgo-search/#description
+
 from duckduckgo_search import DDGS
 import json
 from threading import Lock

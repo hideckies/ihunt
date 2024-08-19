@@ -255,8 +255,6 @@ def gather(ihunt: Ihunt) -> None:
         gather_org(ihunt)
     elif ihunt.query.type == QueryType.PERSON:
         gather_person(ihunt)
-    elif ihunt.query.type == QueryType.MISC:
-        gather_misc(ihunt)
     elif ihunt.query.type == QueryType.UNKNOWN:
         echo("[x] Query Type Unknown", ihunt.verbose)
 
