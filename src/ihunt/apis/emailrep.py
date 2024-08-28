@@ -21,7 +21,7 @@ def req_emailrep_email(ihunt: Ihunt, lock: Lock) -> None:
     }
 
     try:
-        resp = requests.get(url, headers=headers)
+        resp = requests.get(url, headers=headers, timeout=ihunt.timeout)
         if resp.status_code == 200:
             with lock:
                 d = resp.json()

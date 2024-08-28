@@ -53,6 +53,9 @@ ihunt Google
 # Research person
 ihunt "Elon Musk"
 
+# Research phone number
+ihunt "+1 202-555-0123"
+
 # Research URL
 ihunt https://example.com
 ```

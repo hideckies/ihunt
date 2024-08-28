@@ -233,8 +233,21 @@ class DataPerson:
 
 
 @dataclass
-class DataTel:
-    tel: str | None = None
+class DataPhone:
+    phone: str | None = None
+    organization: str | None = None
+    person: str | None = None
+    address: str | None = None
+    country_name: str | None = None
+    country_code: str | None = None
+    city: str | None = None
+    region: str | None = None
+    state: str | None = None
+    postal_code: str | None = None
+    latitude: str | None = None
+    longitude: str | None = None
+    malicious: Any | None = None
+    whitelisted: bool | None = None
 
 
 @dataclass
@@ -283,8 +296,8 @@ def init_data(query: Query) -> Any:
         return DataOrg(organization=query.value)
     elif query.type == QueryType.PERSON:
         return DataPerson(person=query.value)
-    elif query.type == QueryType.TEL:
-        return DataTel(tel=query.value)
+    elif query.type == QueryType.PHONE:
+        return DataPhone(phone=query.value)
     elif query.type == QueryType.URL:
         return DataUrl(url=query.value)
     
@@ -295,12 +308,14 @@ class Ihunt:
         query: Query,
         format: str,
         output: str,
+        timeout: int,
         user_agent: str,
         verbose: bool,
     ) -> None:
         self.query: Query = query
         self.format: str = format
         self.output: str = output
+        self.timeout: int = timeout
         self.user_agent: str = user_agent
         self.verbose: bool = verbose
         self.apikeys = ApiKeys(
@@ -321,6 +336,7 @@ class Ihunt:
 + Query         : {self.query.value}
 + Query Type    : {self.query.type_str()}
 + Format        : {self.format}
++ Timeout       : {self.timeout}
 + Output        : {self.output}
 + Verbose       : {self.verbose}
 """

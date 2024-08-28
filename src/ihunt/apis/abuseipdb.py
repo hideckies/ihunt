@@ -26,7 +26,7 @@ def req_abuseipdb_ip(ihunt: Ihunt, lock: Lock) -> None:
     }
 
     try:
-        resp = requests.get(url, headers=headers, params=params)
+        resp = requests.get(url, headers=headers, params=params, timeout=ihunt.timeout)
         if resp.status_code == 200:
             with lock:
                 d = resp.json()["data"]

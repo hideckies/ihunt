@@ -12,11 +12,12 @@ from .version import print_version
 @click.option('-c', '--config', help='Config file.')
 @click.option('-f', '--format', type=click.Choice(['json', 'pretty', 'yaml']), default='json', help='Print format.')
 @click.option('-o', '--output', help='Write results to the output file path.')
+@click.option('-t', '--timeout', default=10, help='Timeout for fetching APIs.')
 @click.option('-u', '--user-agent', default='ihunt', help='Custome User-Agent used when fetching APIs')
 @click.option('-v', '--verbose', is_flag=True, help='Verbose output.')
 @click.option('--version', is_flag=True, callback=print_version, expose_value=False, is_eager=True, help='The version of the Ihunt.')
 @click.argument('query')
-def run(config: str, format: str, output: str, user_agent: str, verbose: bool, query: str) -> None:
+def run(config: str, format: str, output: str, timeout: int, user_agent: str, verbose: bool, query: str) -> None:
     if config is not None:
         # Load configurations from file.
         if os.path.exists(config) is False:
@@ -30,6 +31,7 @@ def run(config: str, format: str, output: str, user_agent: str, verbose: bool, q
         query=Query(value=query, verbose=verbose),
         format=format,
         output=output,
+        timeout=timeout,
         user_agent=user_agent,
         verbose=verbose,
     )

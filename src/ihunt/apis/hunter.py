@@ -76,7 +76,7 @@ def req_hunter_email(ihunt: Ihunt, lock: Lock) -> None:
     }
 
     try:
-        resp = requests.get(url, params=params)
+        resp = requests.get(url, params=params, timeout=ihunt.timeout)
 
         if resp.status_code == 200:
             with lock:

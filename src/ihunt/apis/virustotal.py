@@ -22,7 +22,7 @@ def req_virustotal_domain(ihunt: Ihunt, lock: Lock) -> None:
     }
 
     try:
-        resp = requests.get(url, headers=headers)
+        resp = requests.get(url, headers=headers, timeout=ihunt.timeout)
         with lock:
             if resp.status_code == 200:
                 d = resp.json()["data"]
@@ -60,7 +60,7 @@ def req_virustotal_ip(ihunt: Ihunt, lock: Lock) -> None:
     }
 
     try:
-        resp = requests.get(url, headers=headers)
+        resp = requests.get(url, headers=headers, timeout=ihunt.timeout)
         with lock:
             if resp.status_code == 200:
                 d = resp.json()["data"]
@@ -106,7 +106,7 @@ def req_virustotal_url(ihunt: Ihunt, lock: Lock) -> None:
     }
 
     try:
-        resp = requests.get(url, headers=headers)
+        resp = requests.get(url, headers=headers, timeout=ihunt.timeout)
         if resp.status_code == 200:
             with lock:
                 d = resp.json()["data"]

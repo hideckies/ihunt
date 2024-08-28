@@ -19,7 +19,7 @@ class QueryType(Enum):
     IP      = 5
     ORG     = 6
     PERSON  = 7
-    TEL     = 8
+    PHONE   = 8
     URL     = 9
     UNKNOWN = 10
 
@@ -34,7 +34,7 @@ File Path
 Hash
 Organization
 Person
-TEL
+Phone number
 Unknown
 """
     try:
@@ -47,8 +47,8 @@ Unknown
             return QueryType.ORG
         elif results.lower() == "person":
             return QueryType.PERSON
-        elif results.lower() == "tel":
-            return QueryType.TEL
+        elif results.lower() == "phone number":
+            return QueryType.PHONE
         else:
             return QueryType.UNKNOWN
     except Exception as e:
@@ -132,8 +132,8 @@ class Query:
             return "Organization"
         elif self.type == QueryType.PERSON:
             return "Person"
-        elif self.type == QueryType.TEL:
-            return "TEL"
+        elif self.type == QueryType.PHONE:
+            return "Phone"
         elif self.type == QueryType.URL:
             return "URL"
         elif self.type == QueryType.UNKNOWN:

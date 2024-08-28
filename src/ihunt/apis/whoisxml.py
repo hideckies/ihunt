@@ -24,7 +24,7 @@ def req_whoisxml_domain(ihunt: Ihunt, lock: Lock) -> None:
     }
 
     try:
-        resp = requests.post(url, headers=headers, json=data)
+        resp = requests.post(url, headers=headers, json=data, timeout=ihunt.timeout)
         if resp.status_code == 200:
             with lock:
                 d = resp.json()["WhoisRecord"]

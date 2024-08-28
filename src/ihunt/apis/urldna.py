@@ -25,7 +25,7 @@ def req_urldna_url(ihunt: Ihunt, lock: Lock) -> None:
     }
 
     try:
-        resp = requests.post(url, headers=headers, data=json.dumps(data))
+        resp = requests.post(url, headers=headers, data=json.dumps(data), timeout=ihunt.timeout)
         if resp.status_code != 200:
             return
         with lock:

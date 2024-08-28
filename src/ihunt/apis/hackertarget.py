@@ -16,7 +16,7 @@ def req_hackertarget_domain(ihunt: Ihunt, lock: Lock) -> None:
     url = BASE_URL + f"/?q={ihunt.query.value}"
 
     try:
-        resp = requests.get(url)
+        resp = requests.get(url, timeout=ihunt.timeout)
         if resp.status_code == 200:
             with lock:
                 lines = resp.content.decode().split('\n')

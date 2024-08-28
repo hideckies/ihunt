@@ -2,7 +2,7 @@ import threading
 from .apis.abuseipdb import req_abuseipdb_ip
 from .apis.alienvault import req_alienvalut_domain
 from .apis.anubis import req_anubis_domain
-from .apis.duckduckgo import req_duckduckgo_email, req_duckduckgo_org, req_duckduckgo_person, req_duckduckgo_url
+from .apis.duckduckgo import req_duckduckgo
 from .apis.emailrep import req_emailrep_email
 from .apis.eva import req_eva_email
 from .apis.hackertarget import req_hackertarget_domain
@@ -17,7 +17,7 @@ from .apis.whoisxml import req_whoisxml_domain
 from .cmds.dig import exec_dig_domain
 from .cmds.whois import exec_whois_domain, exec_whois_ip
 from .querytype import QueryType
-from .models import Ihunt
+from .models import DataDomain, DataEmail, DataIp, DataOrg, DataPerson, DataPhone, DataUrl, Ihunt
 from .stdout import echo
 
 lock = threading.Lock()
@@ -75,6 +75,10 @@ def gather_domain(ihunt: Ihunt) -> None:
     # Execute AI-related APIs lastly from the perspective of accuracy
     # ------------------------------------------------------------------------------
 
+    thread = threading.Thread(target=req_duckduckgo, args=(ihunt, lock, DataDomain))
+    threads.append(thread)
+    thread.start()
+
     for thread in threads:
         thread.join()
 
@@ -101,7 +105,7 @@ def gather_email(ihunt: Ihunt) -> None:
     # Execute AI-related APIs lastly from the perspective of accuracy
     # ------------------------------------------------------------------------------
 
-    thread = threading.Thread(target=req_duckduckgo_email, args=(ihunt, lock))
+    thread = threading.Thread(target=req_duckduckgo, args=(ihunt, lock, DataEmail))
     threads.append(thread)
     thread.start()
 
@@ -156,6 +160,10 @@ def gather_ip(ihunt: Ihunt) -> None:
     # Execute AI-related APIs lastly from the perspective of accuracy
     # ------------------------------------------------------------------------------
 
+    thread = threading.Thread(target=req_duckduckgo, args=(ihunt, lock, DataIp))
+    threads.append(thread)
+    thread.start()
+
     for thread in threads:
         thread.join()
 
@@ -167,7 +175,7 @@ def gather_org(ihunt: Ihunt) -> None:
     # Execute AI-related APIs lastly from the perspective of accuracy
     # ------------------------------------------------------------------------------
 
-    thread = threading.Thread(target=req_duckduckgo_org, args=(ihunt, lock))
+    thread = threading.Thread(target=req_duckduckgo, args=(ihunt, lock, DataOrg))
     threads.append(thread)
     thread.start()
 
@@ -182,7 +190,7 @@ def gather_person(ihunt: Ihunt) -> None:
     # Execute AI-related APIs lastly from the perspective of accuracy
     # ------------------------------------------------------------------------------
 
-    thread = threading.Thread(target=req_duckduckgo_person, args=(ihunt, lock))
+    thread = threading.Thread(target=req_duckduckgo, args=(ihunt, lock, DataPerson))
     threads.append(thread)
     thread.start()
 
@@ -197,8 +205,16 @@ def gather_person(ihunt: Ihunt) -> None:
         thread.join()
 
 
-def gather_tel(ihunt: Ihunt) -> None:
+def gather_phone(ihunt: Ihunt) -> None:
     threads = []
+
+    # ------------------------------------------------------------------------------
+    # Execute AI-related APIs lastly from the perspective of accuracy
+    # ------------------------------------------------------------------------------
+
+    thread = threading.Thread(target=req_duckduckgo, args=(ihunt, lock, DataPhone))
+    threads.append(thread)
+    thread.start()
 
     for thread in threads:
         thread.join()
@@ -225,13 +241,12 @@ def gather_url(ihunt: Ihunt) -> None:
     # Execute AI-related APIs lastly from the perspective of accuracy
     # ------------------------------------------------------------------------------
 
-    thread = threading.Thread(target=req_duckduckgo_url, args=(ihunt, lock))
+    thread = threading.Thread(target=req_duckduckgo, args=(ihunt, lock, DataUrl))
     threads.append(thread)
     thread.start()
 
     for thread in threads:
         thread.join()
-
 
     # Additional research
     if ihunt.data.dom is not None:

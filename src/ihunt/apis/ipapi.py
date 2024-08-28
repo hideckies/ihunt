@@ -16,7 +16,7 @@ def req_ipapi_ip(ihunt: Ihunt, lock: Lock) -> None:
     url = BASE_URL + f"/{ihunt.query.value}/json/"
 
     try:
-        resp = requests.get(url)
+        resp = requests.get(url, timeout=ihunt.timeout)
         if resp.status_code == 200:
             with lock:
                 d = resp.json()
