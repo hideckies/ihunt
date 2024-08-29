@@ -15,9 +15,11 @@ from .utils import remove_null_values_in_dict
 class ApiKeys:
     abuseipdb: str | None = None
     emailrep: str | None = None
+    groq: str | None = None
     haveibeenpwned: str | None = None
     huggingface: str | None = None
     hunter: str | None = None
+    pulsedive: str | None = None
     shodan: str | None = None
     urldna: str | None = None
     urlscan: str | None = None
@@ -78,7 +80,12 @@ class DataDomain:
     tech_fax: str | None = None
     tech_phone: str | None = None
     name_servers: list[str] | None = None
+    dns: dict[str, Any] | None = None
     dnssec: str | None = None
+    ports: list[Any] | None = None
+    protocols: list[str] | None = None
+    technologies: list[str] | None = None
+    http_headers: dict[str, Any] | None = None
     https_cert_signature_algorithm: str | None = None
     https_cert_signature: str | None = None
     emails: list[str] | None = None
@@ -122,13 +129,26 @@ class DataEmail:
 
 
 @dataclass
-class DataFile:
-    file: str | None = None
-
-
-@dataclass
 class DataHash:
     hash: str | None = None
+    hashtype: str | None = None
+    filetype: str | None = None
+    filenames: list[str] | None = None
+    filesize: int | None = None
+    magic: Any | None = None
+    sha1: str | None = None
+    sha256: str | None = None
+    md5: str | None = None
+    tlsh: str | None = None
+    ssdeep: str | None = None
+    vhash: str | None = None
+    telfhash: str | None = None
+    elf_info: dict[str, Any] | None = None
+    pe_info: dict[str, Any] | None = None
+    virustotal_link: str | None = None
+    virustotal_stats: dict[str, int] | None = None
+    virustotal_analysis: dict[str, dict[str, str]] | None = None
+    virustotal_votes: dict[str, int] | None = None
 
 
 @dataclass
@@ -162,7 +182,10 @@ class DataIp:
     isp: str | None = None
     domain: str | None = None
     hostnames: list[str] | None = None
-    ports: list[int] | None = None
+    ports: list[Any] | None = None
+    protocols: list[Any] | None = None
+    technologies: list[Any] | None = None
+    http_headers: dict[str, Any] | None = None
     is_tor: bool | None = None
     subdomains: list[DataDomain] | None = None
     https_cert_signature_algorithm: str | None = None
@@ -286,10 +309,8 @@ def init_data(query: Query) -> Any:
         return DataDomain(domain=query.value)
     elif query.type == QueryType.EMAIL:
         return DataEmail(email=query.value)
-    elif query.type == QueryType.FILE:
-        return DataFile(file=query.value)
     elif query.type == QueryType.HASH:
-        return DataFile(hash=query.value)
+        return DataHash(hash=query.value)
     elif query.type == QueryType.IP:
         return DataIp(ip=query.value)
     elif query.type == QueryType.ORG:
@@ -321,8 +342,10 @@ class Ihunt:
         self.apikeys = ApiKeys(
             abuseipdb=os.getenv("IHUNT_APIKEY_ABUSEIPDB"),
             emailrep=os.getenv("IHUNT_APIKEY_EMAILREP"),
+            groq=os.getenv("IHUNT_APIKEY_GROQ"),
             huggingface=os.getenv("IHUNT_APIKEY_HUGGINGFACE"),
             hunter=os.getenv("IHUNT_APIKEY_HUNTER"),
+            pulsedive=os.getenv("IHUNT_APIKEY_PULSEDIVE"),
             shodan=os.getenv("IHUNT_APIKEY_SHODAN"),
             urldna=os.getenv("IHUNT_APIKEY_URLDNA"),
             urlscan=os.getenv("IHUNT_APIKEY_URLSCAN"),

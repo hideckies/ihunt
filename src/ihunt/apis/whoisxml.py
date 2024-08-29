@@ -4,6 +4,7 @@ import requests
 from threading import Lock
 from ..models import Ihunt
 from ..stdout import echo
+from ..utils import is_empty
 
 BASE_URL = "https://www.whoisxmlapi.com/whoisserver/WhoisService"
 
@@ -28,45 +29,45 @@ def req_whoisxml_domain(ihunt: Ihunt, lock: Lock) -> None:
         if resp.status_code == 200:
             with lock:
                 d = resp.json()["WhoisRecord"]
-                if ihunt.data.domain is None:
+                if is_empty(ihunt.data.domain):
                     ihunt.data.domain = d["domainName"]
-                if ihunt.data.status is None:
+                if is_empty(ihunt.data.status):
                     ihunt.data.status = [d["status"]]
-                # if ihunt.data.availability is None:
+                # if is_empty(ihunt.data.availability):
                 #     ihunt.data.availability = d["domainAvailability"]
-                # if ihunt.data.ips is None:
+                # if is_empty(ihunt.data.ips):
                 #     ihunt.data.domain = d["ips"]
-                if ihunt.data.registrar_name is None:
+                if is_empty(ihunt.data.registrar_name):
                     ihunt.data.registrar_name = d["registryData"]["registrarName"]
-                if ihunt.data.registrar_iana_id is None:
+                if is_empty(ihunt.data.registrar_iana_id):
                     ihunt.data.registrar_iana_id = d["registryData"]["registrarIANAID"]
-                if ihunt.data.registrant_organization is None:
+                if is_empty(ihunt.data.registrant_organization):
                     ihunt.data.registrant_organization = d["registrant"]["organization"]
-                if ihunt.data.registrant_country is None:
+                if is_empty(ihunt.data.registrant_country):
                     ihunt.data.registrant_country = d["registrant"]["country"]
-                if ihunt.data.registrant_country_code is None:
+                if is_empty(ihunt.data.registrant_country_code):
                     ihunt.data.registrant_country_code = d["registrant"]["countryCode"]
-                if ihunt.data.registrant_state is None:
+                if is_empty(ihunt.data.registrant_state):
                     ihunt.data.registrant_state = d["registrant"]["state"]
-                if ihunt.data.registrant_city is None:
+                if is_empty(ihunt.data.registrant_city):
                     ihunt.data.registrant_city = d["registrant"]["city"]
-                if ihunt.data.admin_organization is None:
+                if is_empty(ihunt.data.admin_organization):
                     ihunt.data.admin_organization = d["administrativeContact"]["organization"]
-                if ihunt.data.admin_state is None:
+                if is_empty(ihunt.data.admin_state):
                     ihunt.data.admin_state = d["administrativeContact"]["state"]
-                if ihunt.data.admin_country is None:
+                if is_empty(ihunt.data.admin_country):
                     ihunt.data.admin_country = d["administrativeContact"]["country"]
-                if ihunt.data.admin_country_code is None:
+                if is_empty(ihunt.data.admin_country_code):
                     ihunt.data.admin_country_code = d["administrativeContact"]["countryCode"]
-                if ihunt.data.tech_organization is None:
+                if is_empty(ihunt.data.tech_organization):
                     ihunt.data.tech_organization = d["technicalContact"]["organization"]
-                if ihunt.data.tech_country is None:
+                if is_empty(ihunt.data.tech_country):
                     ihunt.data.tech_country = d["technicalContact"]["country"]
-                if ihunt.data.tech_country_code is None:
+                if is_empty(ihunt.data.tech_country_code):
                     ihunt.data.tech_country_code = d["technicalContact"]["countryCode"]
-                if ihunt.data.tech_state is None:
+                if is_empty(ihunt.data.tech_state):
                     ihunt.data.tech_state = d["technicalContact"]["state"]
-                if ihunt.data.name_servers is None:
+                if is_empty(ihunt.data.name_servers):
                     ihunt.data.name_servers = d["nameServers"]["hostNames"]
     except Exception as e:
         echo(f"[x] WhoisXML API error: {e}", ihunt.verbose)

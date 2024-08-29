@@ -14,14 +14,13 @@ model_ner = "dslim/bert-base-NER"
 class QueryType(Enum):
     DOMAIN  = 1
     EMAIL   = 2
-    FILE    = 3
-    HASH    = 4
-    IP      = 5
-    ORG     = 6
-    PERSON  = 7
-    PHONE   = 8
-    URL     = 9
-    UNKNOWN = 10
+    HASH    = 3
+    IP      = 4
+    ORG     = 5
+    PERSON  = 6
+    PHONE   = 7
+    URL     = 8
+    UNKNOWN = 9
 
 
 # The function is used for detecting query type.
@@ -30,7 +29,6 @@ def identify_querytype_with_duckduckgo(query: str, verbose: bool) -> QueryType:
     prompt = f"""
 Which of the following types can the text "{query}" be categorized into? Please answer just the category type.
 
-File Path
 Hash
 Organization
 Person
@@ -39,9 +37,7 @@ Unknown
 """
     try:
         results = DDGS().chat(f"{prompt}", model='claude-3-haiku')
-        if results.lower() == "file path":
-            return QueryType.FILE
-        elif results.lower() == "hash":
+        if results.lower() == "hash":
             return QueryType.HASH
         elif results.lower() == "organization":
             return QueryType.ORG
@@ -122,8 +118,6 @@ class Query:
             return "Domain"
         elif self.type == QueryType.EMAIL:
             return "Email"
-        elif self.type == QueryType.FILE:
-            return "File"
         elif self.type == QueryType.HASH:
             return "Hash"
         elif self.type == QueryType.IP:

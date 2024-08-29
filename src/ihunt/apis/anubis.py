@@ -4,6 +4,7 @@ import requests
 from threading import Lock
 from ..models import Ihunt
 from ..stdout import echo
+from ..utils import is_empty
 
 BASE_URL = "https://jonlu.ca/anubis/subdomains"
 
@@ -21,7 +22,7 @@ def req_anubis_domain(ihunt: Ihunt, lock: Lock) -> None:
             with lock:
                 subdomains = resp.json()
                 for subdomain in subdomains:
-                    if ihunt.data.subdomains is None:
+                    if is_empty(ihunt.data.subdomains):
                         ihunt.data.subdomains = [subdomain]
                     else:
                         if subdomain not in ihunt.data.subdomains:

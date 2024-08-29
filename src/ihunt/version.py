@@ -1,6 +1,6 @@
 import click
 
-VERSION = "0.1.2"
+VERSION = "0.1.3"
 
 
 def print_version(ctx, param, value) -> None:

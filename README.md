@@ -38,10 +38,7 @@ ihunt example.com
 # Research email address
 ihunt user@example.com
 
-# Research file (under development & not yet available)
-ihunt ./example.exe
-
-# Research hash (under development & not yet available)
+# Research hash
 ihunt ed076287532e86365e841e92bfc50d8c
 
 # Research IP address

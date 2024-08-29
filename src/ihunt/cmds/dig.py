@@ -3,6 +3,7 @@ import subprocess
 from threading import Lock
 from ..models import Ihunt
 from ..stdout import echo
+from ..utils import is_empty
 
 
 # Query: Domain
@@ -17,7 +18,7 @@ def exec_dig_domain(ihunt: Ihunt, lock: Lock) -> None:
         with lock:
             for line in lines:
                 if re.match(r'^\d{1,3}(\.\d{1,3}){3}$', line):
-                    if ihunt.data.ips is None:
+                    if is_empty(ihunt.data.ips):
                         ihunt.data.ips = [line]
                     else:
                         if line not in ihunt.data.ips:

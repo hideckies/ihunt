@@ -4,7 +4,7 @@ import requests
 from threading import Lock
 from ..models import Ihunt
 from ..stdout import echo
-from ..utils import is_ip_address
+from ..utils import is_empty, is_ip_address
 
 BASE_URL = "https://otx.alienvault.com/api/v1/indicators/domain"
 
@@ -23,13 +23,13 @@ def req_alienvalut_domain(ihunt: Ihunt, lock: Lock) -> None:
                 data = resp.json()["passive_dns"]
                 for d in data:
                     if is_ip_address(d["address"]):
-                        if ihunt.data.ips is None:
+                        if is_empty(ihunt.data.ips):
                             ihunt.data.ips = [d["address"]]
                         else:
                             if d["address"] not in ihunt.data.ips:
                                 ihunt.data.ips.append(d["address"])
                     if is_ip_address(d["hostname"]) is False:
-                        if ihunt.data.subdomains is None:
+                        if is_empty(ihunt.data.subdomains):
                             ihunt.data.subdomains = [d["hostname"]]
                         else:
                             if d["hostname"] not in ihunt.data.subdomains:

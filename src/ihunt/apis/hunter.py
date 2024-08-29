@@ -4,6 +4,7 @@ import requests
 from threading import Lock
 from ..models import Ihunt
 from ..stdout import echo
+from ..utils import is_empty
 
 BASE_URL = "https://api.hunter.io/v2"
 
@@ -24,37 +25,37 @@ def req_hunter_domain(ihunt: Ihunt, lock: Lock) -> None:
         if resp.status_code == 200:
             with lock:
                 d = resp.json()["data"]
-                if ihunt.data.domain is None:
+                if is_empty(ihunt.data.domain):
                     ihunt.data.domain = d["domain"]
-                if ihunt.data.registrant_organization is None:
+                if is_empty(ihunt.data.registrant_organization):
                     ihunt.data.registrant_organization = d["organization"]
-                if ihunt.data.registrant_desc is None:
+                if is_empty(ihunt.data.registrant_desc):
                     ihunt.data.registrant_desc = d["description"]
-                if ihunt.data.registrant_industry is None:
+                if is_empty(ihunt.data.registrant_industry):
                     ihunt.data.registrant_industry = d["industry"]
-                if ihunt.data.registrant_twitter is None:
+                if is_empty(ihunt.data.registrant_twitter):
                     ihunt.data.registrant_twitter = d["twitter"]
-                if ihunt.data.registrant_facebook is None:
+                if is_empty(ihunt.data.registrant_facebook):
                     ihunt.data.registrant_facebook = d["facebook"]
-                if ihunt.data.registrant_linkedin is None:
+                if is_empty(ihunt.data.registrant_linkedin):
                     ihunt.data.registrant_linkedin = d["linkedin"]
-                if ihunt.data.registrant_instagram is None:
+                if is_empty(ihunt.data.registrant_instagram):
                     ihunt.data.registrant_instagram = d["instagram"]
-                if ihunt.data.registrant_youtube is None:
+                if is_empty(ihunt.data.registrant_youtube):
                     ihunt.data.registrant_youtube = d["youtube"]
-                if ihunt.data.registrant_country_code is None:
+                if is_empty(ihunt.data.registrant_country_code):
                     ihunt.data.registrant_country_code = d["country"]
-                if ihunt.data.registrant_state is None:
+                if is_empty(ihunt.data.registrant_state):
                     ihunt.data.registrant_state = d["state"]
-                if ihunt.data.registrant_city is None:
+                if is_empty(ihunt.data.registrant_city):
                     ihunt.data.registrant_city = d["city"]
-                if ihunt.data.registrant_street is None:
+                if is_empty(ihunt.data.registrant_street):
                     ihunt.data.registrant_street = d["street"]
-                if ihunt.data.registrant_postal_code is None:
+                if is_empty(ihunt.data.registrant_postal_code):
                     ihunt.data.registrant_postal_code
                 if len(d["emails"]) > 0:
                     for email in d["emails"]:
-                        if ihunt.data.emails is None:
+                        if is_empty(ihunt.data.emails):
                             ihunt.data.emails = [email["value"]]
                         else:
                             ihunt.data.emails.append(email["value"])
@@ -81,21 +82,21 @@ def req_hunter_email(ihunt: Ihunt, lock: Lock) -> None:
         if resp.status_code == 200:
             with lock:
                 d = resp.json()["data"]
-                if ihunt.data.gibberish is None:
+                if is_empty(ihunt.data.gibberish):
                     ihunt.data.gibberish = d["gibberish"]
-                if ihunt.data.disposable is None:
+                if is_empty(ihunt.data.disposable):
                     ihunt.data.disposable = d["disposable"]
-                if ihunt.data.webmail is None:
+                if is_empty(ihunt.data.webmail):
                     ihunt.data.webmail = d["webmail"]
-                if ihunt.data.mx_records is None:
+                if is_empty(ihunt.data.mx_records):
                     ihunt.data.mx_records = d["mx_records"]
-                if ihunt.data.smtp_server is None:
+                if is_empty(ihunt.data.smtp_server):
                     ihunt.data.smtp_server = d["smtp_server"]
-                if ihunt.data.smtp_check is None:
+                if is_empty(ihunt.data.smtp_check):
                     ihunt.data.smtp_check = d["smtp_check"]
-                if ihunt.data.accept_all is None:
+                if is_empty(ihunt.data.accept_all):
                     ihunt.data.accept_all = d["accept_all"]
-                if ihunt.data.block is None:
+                if is_empty(ihunt.data.block):
                     ihunt.data.block = d["block"]
     except Exception as e:
         echo("[x] Hunter API error: {e}", ihunt.verbose)

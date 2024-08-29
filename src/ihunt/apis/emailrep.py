@@ -4,6 +4,7 @@ import requests
 from threading import Lock
 from ..models import Ihunt
 from ..stdout import echo
+from ..utils import is_empty
 
 BASE_URL = "https://emailrep.io"
 
@@ -25,41 +26,41 @@ def req_emailrep_email(ihunt: Ihunt, lock: Lock) -> None:
         if resp.status_code == 200:
             with lock:
                 d = resp.json()
-                if ihunt.data.email is None:
+                if is_empty(ihunt.data.email):
                     ihunt.data.email = d["email"]
-                if ihunt.data.domain_exists is None:
+                if is_empty(ihunt.data.domain_exists):
                     ihunt.data.domain_exists = d["details"]["domain_exists"]
-                if ihunt.data.domain_reputation is None:
+                if is_empty(ihunt.data.domain_reputation):
                     ihunt.data.domain_reputation = d["details"]["domain_reputation"]
-                if ihunt.data.domain_new is None:
+                if is_empty(ihunt.data.domain_new):
                     ihunt.data.domain_new = d["details"]["new_domain"]
-                if ihunt.data.free_provider is None:
+                if is_empty(ihunt.data.free_provider):
                     ihunt.data.free_provider = d["details"]["free_provider"]
-                if ihunt.data.disposable is None:
+                if is_empty(ihunt.data.disposable):
                     ihunt.data.disposable = d["details"]["disposable"]
-                if ihunt.data.deliverable is None:
+                if is_empty(ihunt.data.deliverable):
                     ihunt.data.deliverable = d["details"]["deliverable"]
-                if ihunt.data.spoofable is None:
+                if is_empty(ihunt.data.spoofable):
                     ihunt.data.spoofable = d["details"]["spoofable"]
-                if ihunt.data.dmarc_enforced is None:
+                if is_empty(ihunt.data.dmarc_enforced):
                     ihunt.data.dmarc_enforced = d["details"]["dmarc_enforced"]
-                if ihunt.data.accept_all is None:
+                if is_empty(ihunt.data.accept_all):
                     ihunt.data.accept_all = d["details"]["accept_all"]
-                if ihunt.data.spam is None:
+                if is_empty(ihunt.data.spam):
                     ihunt.data.spam = d["details"]["spam"]
-                if ihunt.data.suspicious is None:
+                if is_empty(ihunt.data.suspicious):
                     ihunt.data.suspicious = d["suspicious"]
-                if ihunt.data.blacklisted is None:
+                if is_empty(ihunt.data.blacklisted):
                     ihunt.data.blacklisted = d["details"]["blacklisted"]
-                if ihunt.data.malicious_activity is None:
+                if is_empty(ihunt.data.malicious_activity):
                     ihunt.data.malicious_activity = d["details"]["malicious_activity"]
-                if ihunt.data.malicious_activity_recent is None:
+                if is_empty(ihunt.data.malicious_activity_recent):
                     ihunt.data.malicious_activity_recent = d["details"]["malicious_activity_recent"]
-                if ihunt.data.credentials_leaked is None:
+                if is_empty(ihunt.data.credentials_leaked):
                     ihunt.data.credentials_leaked = d["details"]["credentials_leaked"]
-                if ihunt.data.credentials_leaked_recent is None:
+                if is_empty(ihunt.data.credentials_leaked_recent):
                     ihunt.data.credentials_leaked_recent = d["details"]["credentials_leaked_recent"]
-                if ihunt.data.data_breach is None:
+                if is_empty(ihunt.data.data_breach):
                     ihunt.data.data_breach = d["details"]["data_breach"]
     except Exception as e:
         echo(f"[x] Emailrep API error: {e}", ihunt.verbose)

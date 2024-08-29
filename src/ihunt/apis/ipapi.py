@@ -4,6 +4,7 @@ import requests
 from threading import Lock
 from ..models import Ihunt
 from ..stdout import echo
+from ..utils import is_empty
 
 BASE_URL = "https://ipapi.co"
 
@@ -20,37 +21,37 @@ def req_ipapi_ip(ihunt: Ihunt, lock: Lock) -> None:
         if resp.status_code == 200:
             with lock:
                 d = resp.json()
-                if ihunt.data.ip is None:
+                if is_empty(ihunt.data.ip):
                     ihunt.data.ip = d["ip"]
-                if ihunt.data.net_range is None:
+                if is_empty(ihunt.data.net_range):
                     ihunt.data.net_range = d["network"]
-                if ihunt.data.region is None:
+                if is_empty(ihunt.data.region):
                     ihunt.data.region = d["region"]
-                if ihunt.data.country_code is None:
+                if is_empty(ihunt.data.country_code):
                     ihunt.data.country_code = d["country_code"]
-                if ihunt.data.country_name is None:
+                if is_empty(ihunt.data.country_name):
                     ihunt.data.country_name = d["country_name"]
-                if ihunt.data.postal_code is None:
+                if is_empty(ihunt.data.postal_code):
                     ihunt.data.postal_code = d["postal"]
-                if ihunt.data.latitude is None:
+                if is_empty(ihunt.data.latitude):
                     ihunt.data.latitude = d["latitude"]
-                if ihunt.data.longitude is None:
+                if is_empty(ihunt.data.longitude):
                     ihunt.data.longitude = d["longitude"]
-                if ihunt.data.timezone is None:
+                if is_empty(ihunt.data.timezone):
                     ihunt.data.timezone = d["timezone"]
-                if ihunt.data.currency is None:
+                if is_empty(ihunt.data.currency):
                     ihunt.data.currency = d["currency"]
-                if ihunt.data.currency_name is None:
+                if is_empty(ihunt.data.currency_name):
                     ihunt.data.currency_name = d["currency_name"]
-                if ihunt.data.languages is None:
+                if is_empty(ihunt.data.languages):
                     ihunt.data.languages = d["languages"].split(',')
                 else:
                     for lang in d["languages"].split(','):
                         if lang not in ihunt.data.languages:
                             ihunt.data.languages.append(lang)
-                if ihunt.data.asn is None:
+                if is_empty(ihunt.data.asn):
                     ihunt.data.asn = d["asn"]
-                if ihunt.data.organization is None:
+                if is_empty(ihunt.data.organization):
                     ihunt.data.organization = d["org"]
     except Exception as e:
         echo(f"[x] IPAPI API error: {e}", ihunt.verbose)

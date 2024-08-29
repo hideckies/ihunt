@@ -4,6 +4,7 @@ import requests
 from threading import Lock
 from ..models import Ihunt
 from ..stdout import echo
+from ..utils import is_empty
 
 BASE_URL = "https://freeapi.robtex.com/ipquery"
 
@@ -22,13 +23,13 @@ def req_robtex_ip(ihunt: Ihunt, lock: Lock) -> None:
                 d = resp.json()
                 if d["status"] != "ok":
                     return
-                if ihunt.data.city is None:
+                if is_empty(ihunt.data.city):
                     ihunt.data.city = d["city"]
-                if ihunt.data.country_name is None:
+                if is_empty(ihunt.data.country_name):
                     ihunt.data.country_name = d["country"]
-                if ihunt.data.asn is None:
+                if is_empty(ihunt.data.asn):
                     ihunt.data.asn = d["as"]
-                if ihunt.data.asname is None:
+                if is_empty(ihunt.data.asname):
                     ihunt.data.asname = d["asname"]
     except Exception as e:
         echo(f"[x] Robtex API error: {e}", ihunt.verbose)

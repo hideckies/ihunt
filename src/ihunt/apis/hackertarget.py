@@ -4,6 +4,7 @@ import requests
 from threading import Lock
 from ..models import Ihunt
 from ..stdout import echo
+from ..utils import is_empty
 
 BASE_URL = "https://api.hackertarget.com/hostsearch"
 
@@ -23,14 +24,14 @@ def req_hackertarget_domain(ihunt: Ihunt, lock: Lock) -> None:
                 for line in lines:
                     spl = line.split(',')
                     # Subdomain
-                    if ihunt.data.subdomains is None:
+                    if is_empty(ihunt.data.subdomains):
                         ihunt.data.subdomains = [spl[0]]
                     else:
                         if spl[0] not in ihunt.data.subdomains:
                             ihunt.data.subdomains.append(spl[0])
                     # IP
                     if len(spl) == 2:
-                        if ihunt.data.ips is None:
+                        if is_empty(ihunt.data.ips):
                             ihunt.data.ips = [spl[1]]
                         else:
                             if spl[1] not in ihunt.data.ips:

@@ -6,6 +6,7 @@ from threading import Lock
 import time
 from ..models import Ihunt
 from ..stdout import echo
+from ..utils import is_empty
 
 BASE_URL = "https://api.urldna.io/scan"
 
@@ -51,49 +52,49 @@ def req_urldna_url(ihunt: Ihunt, lock: Lock) -> None:
                     echo(f"[x] urlDNA API error: The scan failed.", ihunt.verbose)
                     return
                 elif scan_status == "DONE":
-                    if ihunt.data.cert_issuer is None:
+                    if is_empty(ihunt.data.cert_issuer):
                         ihunt.data.cert_issuer = d["certificate"]["issuer"]
-                    if ihunt.data.cert_subject is None:
+                    if is_empty(ihunt.data.cert_subject):
                         ihunt.data.cert_subject = d["certificate"]["subject"]
-                    if ihunt.data.cert_serial_number is None:
+                    if is_empty(ihunt.data.cert_serial_number):
                         ihunt.data.cert_serial_number = d["certificate"]["serial_number"]
-                    if ihunt.data.console_messages is None:
+                    if is_empty(ihunt.data.console_messages):
                         ihunt.data.console_messages = []
                         for msg in d["console_messages"]:
                             ihunt.data.console_messages.append(msg)
-                    if ihunt.data.cookies is None:
+                    if is_empty(ihunt.data.cookies):
                         ihunt.data.cookies = d["cookies"]
-                    if ihunt.data.dom is None:
+                    if is_empty(ihunt.data.dom):
                         ihunt.data.dom = d["dom"]
-                    if ihunt.data.favicon is None:
+                    if is_empty(ihunt.data.favicon):
                         ihunt.data.favicon = d["favicon"]
-                    if ihunt.data.ip is None:
+                    if is_empty(ihunt.data.ip):
                         ihunt.data.ip = d["ip_address"]["ip"]
-                    if ihunt.data.asn is None:
+                    if is_empty(ihunt.data.asn):
                         ihunt.data.asn = d["ip_address"]["asn"]
-                    if ihunt.data.isp is None:
+                    if is_empty(ihunt.data.isp):
                         ihunt.data.isp = d["ip_address"]["isp"]
-                    if ihunt.data.organization is None:
+                    if is_empty(ihunt.data.organization):
                         ihunt.data.organization = d["ip_address"]["org"]
-                    if ihunt.data.country_name is None:
+                    if is_empty(ihunt.data.country_name):
                         ihunt.data.country_name = d["ip_address"]["country"]
-                    if ihunt.data.country_code is None:
+                    if is_empty(ihunt.data.country_code):
                         ihunt.data.country_code = d["ip_address"]["country_code"]
-                    if ihunt.data.region is None:
+                    if is_empty(ihunt.data.region):
                         ihunt.data.region = d["ip_address"]["region"]
-                    if ihunt.data.city is None:
+                    if is_empty(ihunt.data.city):
                         ihunt.data.city = d["ip_address"]["city"]
-                    if ihunt.data.latitude is None:
+                    if is_empty(ihunt.data.latitude):
                         ihunt.data.latitude = str(d["ip_address"]["latitude"])
-                    if ihunt.data.longitude is None:
+                    if is_empty(ihunt.data.longitude):
                         ihunt.data.longitude = str(d["ip_address"]["longitude"])
-                    if ihunt.data.malicious is None:
+                    if is_empty(ihunt.data.malicious):
                         ihunt.data.malicious = d["malicious"]
-                    if ihunt.data.page is None:
+                    if is_empty(ihunt.data.page):
                         ihunt.data.page = d["page"]
-                    if ihunt.data.screenshot is None:
+                    if is_empty(ihunt.data.screenshot):
                         ihunt.data.screenshot = d["screenshot"]
-                    if ihunt.data.technologies is None:
+                    if is_empty(ihunt.data.technologies):
                         ihunt.data.technologies = d["technologies"]
                     break
     except Exception as e:
