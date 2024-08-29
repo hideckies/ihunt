@@ -1,14 +1,8 @@
 from duckduckgo_search import DDGS
 from enum import Enum
 import re
-# from .apis.duckduckgo import req_duckduckgo_querytype
 from .stdout import echo
 from .utils import is_ip_address
-
-
-# Search models: https://huggingface.co/models?pipeline_tag=token-classification
-model_ner = "dslim/bert-base-NER"
-# model_ner = "dbmdz/bert-large-cased-finetuned-conll03-english"
 
 
 class QueryType(Enum):
@@ -52,33 +46,6 @@ Unknown
          return QueryType.UNKNOWN
 
 
-# Uses LLM NER task.
-def identify_querytype_with_huggingface(query: str) -> QueryType:
-    import torch
-    from transformers import pipeline
-    device = (
-        "cuda"
-        if torch.cuda.is_available()
-        else "mps"
-        if torch.backends.mps.is_available()
-        else "cpu"
-    )
-    ner = pipeline(task="ner", model=model_ner, device=device)
-    entities = ner(query)
-    
-    if len(entities) == 0:
-        return QueryType.UNKNOWN
-
-    for entity in entities:
-        entity_type = entity['entity']
-        if "-ORG" in entity_type:
-            return QueryType.ORG
-        elif "-PER" in entity_type:
-            return QueryType.PERSON
-        else:
-            return QueryType.UNKNOWN
-
-
 def identify_querytype(query: str, verbose: bool) -> QueryType:
     echo("[*] Identifying the query type...", verbose)
 
@@ -98,11 +65,7 @@ def identify_querytype(query: str, verbose: bool) -> QueryType:
     
     # Try DuckDuckGo Chat API.
     query_type = identify_querytype_with_duckduckgo(query, verbose)
-    if query_type != QueryType.UNKNOWN:
-        return query_type
-
-    # Try HuggingFace API.
-    return identify_querytype_with_huggingface(query)
+    return query_type
 
 
 class Query:
