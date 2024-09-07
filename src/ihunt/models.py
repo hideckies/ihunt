@@ -15,6 +15,7 @@ from .utils import remove_null_values_in_dict
 class ApiKeys:
     abuseipdb: str | None = None
     emailrep: str | None = None
+    gemini: str | None = None
     groq: str | None = None
     haveibeenpwned: str | None = None
     huggingface: str | None = None
@@ -187,6 +188,8 @@ class DataIp:
     technologies: list[Any] | None = None
     http_headers: dict[str, Any] | None = None
     is_tor: bool | None = None
+    is_proxy: bool | None = None
+    is_mobile: bool | None = None
     subdomains: list[DataDomain] | None = None
     https_cert_signature_algorithm: str | None = None
     https_cert_signature: str | None = None
@@ -342,6 +345,7 @@ class Ihunt:
         self.apikeys = ApiKeys(
             abuseipdb=os.getenv("IHUNT_APIKEY_ABUSEIPDB"),
             emailrep=os.getenv("IHUNT_APIKEY_EMAILREP"),
+            gemini=os.getenv("IHUNT_APIKEY_GEMINI"),
             groq=os.getenv("IHUNT_APIKEY_GROQ"),
             huggingface=os.getenv("IHUNT_APIKEY_HUGGINGFACE"),
             hunter=os.getenv("IHUNT_APIKEY_HUNTER"),

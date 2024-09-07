@@ -8,11 +8,12 @@ from ..models import Ihunt
 from ..stdout import echo
 from ..utils import create_prompt, extract_json_from_str, update_data_from_json
 
+API_NAME = "Groq"
 
 
 # Query: All
 def req_groq(ihunt: Ihunt, lock: Lock, data_class: Any) -> None:
-    echo("[*] Fetching Groq...", ihunt.verbose)
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
     
     client = Groq(
         api_key=ihunt.apikeys.groq,
@@ -40,6 +41,7 @@ def req_groq(ihunt: Ihunt, lock: Lock, data_class: Any) -> None:
                 raise ValueError("JSON not found in the result.")
             update_data_from_json(ihunt.data, json.loads(json_str))
     except Exception as e:
-         echo(f"[x] Groq API error: {e}", ihunt.verbose)
-    echo("[*] Finished fetching Groq...", ihunt.verbose)
+         echo(f"[x] {API_NAME} API error: {e}", ihunt.verbose)
+
+    echo(f"[*] Finished fetching {API_NAME}...", ihunt.verbose)
 

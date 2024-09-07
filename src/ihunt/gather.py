@@ -1,20 +1,22 @@
 import threading
-from .apis.abuseipdb import req_abuseipdb_ip
-from .apis.alienvault import req_alienvalut_domain
-from .apis.anubis import req_anubis_domain
-from .apis.duckduckgo import req_duckduckgo
-from .apis.emailrep import req_emailrep_email
-from .apis.eva import req_eva_email
-from .apis.groq import req_groq
-from .apis.hackertarget import req_hackertarget_domain
-from .apis.hunter import req_hunter_domain, req_hunter_email
-from .apis.ipapi import req_ipapi_ip
-from .apis.pulsedive import req_pulsedive_domain, req_pulsedive_ip
-from .apis.robtex import req_robtex_ip
-from .apis.subdomaincenter import req_subdomaincenter_domain
-from .apis.urldna import req_urldna_url
-from .apis.virustotal import req_virustotal_domain, req_virustotal_hash, req_virustotal_ip, req_virustotal_url
-from .apis.whoisxml import req_whoisxml_domain
+from .api.abuseipdb import req_abuseipdb_ip
+from .api.alienvault import req_alienvalut_domain
+from .api.anubis import req_anubis_domain
+from .api.duckduckgo import req_duckduckgo
+from .api.emailrep import req_emailrep_email
+from .api.eva import req_eva_email
+from .api.gemini import req_gemini
+from .api.groq import req_groq
+from .api.hackertarget import req_hackertarget_domain
+from .api.hunter import req_hunter_domain, req_hunter_email
+from .api.ip_api import req_ip_api_ip
+from .api.ipapi import req_ipapi_ip
+from .api.pulsedive import req_pulsedive_domain, req_pulsedive_ip
+from .api.robtex import req_robtex_ip
+from .api.subdomaincenter import req_subdomaincenter_domain
+from .api.urldna import req_urldna_url
+from .api.virustotal import req_virustotal_domain, req_virustotal_hash, req_virustotal_ip, req_virustotal_url
+from .api.whoisxml import req_whoisxml_domain
 from .cmds.dig import exec_dig_domain
 from .cmds.whois import exec_whois_domain, exec_whois_ip
 from .querytype import QueryType
@@ -97,6 +99,13 @@ def gather_domain(ihunt: Ihunt) -> None:
     threads.append(thread)
     thread.start()
 
+    if ihunt.apikeys.gemini:
+        thread = threading.Thread(target=req_gemini, args=(ihunt, lock, DataDomain))
+        threads.append(thread)
+        thread.start()
+    else:
+        echo("[x] Gemini API key is not set.", ihunt.verbose)
+
     if ihunt.apikeys.groq:
         thread = threading.Thread(target=req_groq, args=(ihunt, lock, DataDomain))
         threads.append(thread)
@@ -134,6 +143,13 @@ def gather_email(ihunt: Ihunt) -> None:
     threads.append(thread)
     thread.start()
 
+    if ihunt.apikeys.gemini:
+        thread = threading.Thread(target=req_gemini, args=(ihunt, lock, DataEmail))
+        threads.append(thread)
+        thread.start()
+    else:
+        echo("[x] Gemini API key is not set.", ihunt.verbose)
+
     if ihunt.apikeys.groq:
         thread = threading.Thread(target=req_groq, args=(ihunt, lock, DataEmail))
         threads.append(thread)
@@ -158,6 +174,13 @@ def gather_hash(ihunt: Ihunt) -> None:
     # ------------------------------------------------------------------------------
     # Execute AI-related APIs lastly from the perspective of accuracy
     # ------------------------------------------------------------------------------
+
+    if ihunt.apikeys.gemini:
+        thread = threading.Thread(target=req_gemini, args=(ihunt, lock, DataHash))
+        threads.append(thread)
+        thread.start()
+    else:
+        echo("[x] Gemini API key is not set.", ihunt.verbose)
 
     thread = threading.Thread(target=req_duckduckgo, args=(ihunt, lock, DataHash))
     threads.append(thread)
@@ -188,12 +211,16 @@ def gather_ip(ihunt: Ihunt) -> None:
     else:
         echo("[x] AbuseIPDB API key is not set.", ihunt.verbose)
 
+    thread = threading.Thread(target=req_ip_api_ip, args=(ihunt, lock))
+    threads.append(thread)
+    thread.start()
+
     thread = threading.Thread(target=req_ipapi_ip, args=(ihunt, lock))
     threads.append(thread)
     thread.start()
 
     if ihunt.apikeys.pulsedive:
-        thread = threading.Thread(target=req_ipapi_ip, args=(ihunt, lock))
+        thread = threading.Thread(target=req_pulsedive_ip, args=(ihunt, lock))
         threads.append(thread)
         thread.start()
     else:
@@ -213,6 +240,13 @@ def gather_ip(ihunt: Ihunt) -> None:
     # ------------------------------------------------------------------------------
     # Execute AI-related APIs lastly from the perspective of accuracy
     # ------------------------------------------------------------------------------
+
+    if ihunt.apikeys.gemini:
+        thread = threading.Thread(target=req_gemini, args=(ihunt, lock, DataIp))
+        threads.append(thread)
+        thread.start()
+    else:
+        echo("[x] Gemini API key is not set.", ihunt.verbose)
 
     thread = threading.Thread(target=req_duckduckgo, args=(ihunt, lock, DataIp))
     threads.append(thread)
@@ -235,6 +269,13 @@ def gather_org(ihunt: Ihunt) -> None:
     # ------------------------------------------------------------------------------
     # Execute AI-related APIs lastly from the perspective of accuracy
     # ------------------------------------------------------------------------------
+
+    if ihunt.apikeys.gemini:
+        thread = threading.Thread(target=req_gemini, args=(ihunt, lock, DataOrg))
+        threads.append(thread)
+        thread.start()
+    else:
+        echo("[x] Gemini API key is not set.", ihunt.verbose)
 
     thread = threading.Thread(target=req_duckduckgo, args=(ihunt, lock, DataOrg))
     threads.append(thread)
@@ -262,6 +303,13 @@ def gather_person(ihunt: Ihunt) -> None:
     threads.append(thread)
     thread.start()
 
+    if ihunt.apikeys.gemini:
+        thread = threading.Thread(target=req_gemini, args=(ihunt, lock, DataPerson))
+        threads.append(thread)
+        thread.start()
+    else:
+        echo("[x] Gemini API key is not set.", ihunt.verbose)
+
     if ihunt.apikeys.groq:
         thread = threading.Thread(target=req_groq, args=(ihunt, lock, DataPerson))
         threads.append(thread)
@@ -283,6 +331,13 @@ def gather_phone(ihunt: Ihunt) -> None:
     thread = threading.Thread(target=req_duckduckgo, args=(ihunt, lock, DataPhone))
     threads.append(thread)
     thread.start()
+
+    if ihunt.apikeys.gemini:
+        thread = threading.Thread(target=req_gemini, args=(ihunt, lock, DataPhone))
+        threads.append(thread)
+        thread.start()
+    else:
+        echo("[x] Gemini API key is not set.", ihunt.verbose)
 
     if ihunt.apikeys.groq:
         thread = threading.Thread(target=req_groq, args=(ihunt, lock, DataPhone))
@@ -319,6 +374,13 @@ def gather_url(ihunt: Ihunt) -> None:
     thread = threading.Thread(target=req_duckduckgo, args=(ihunt, lock, DataUrl))
     threads.append(thread)
     thread.start()
+
+    if ihunt.apikeys.gemini:
+        thread = threading.Thread(target=req_gemini, args=(ihunt, lock, DataUrl))
+        threads.append(thread)
+        thread.start()
+    else:
+        echo("[x] Gemini API key is not set.", ihunt.verbose)
 
     if ihunt.apikeys.groq:
         thread = threading.Thread(target=req_groq, args=(ihunt, lock, DataUrl))

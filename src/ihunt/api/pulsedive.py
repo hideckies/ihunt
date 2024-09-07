@@ -6,12 +6,13 @@ from ..models import Ihunt
 from ..stdout import echo
 from ..utils import is_empty
 
+API_NAME = "Pulsedive"
 BASE_URL = "https://pulsedive.com/api"
 
 # Query: Domain
 # Return: Info
 def req_pulsedive_domain(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Fetching Pulsedive...", ihunt.verbose)
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
 
     url = BASE_URL + f"/info.php"
     params = {
@@ -36,15 +37,15 @@ def req_pulsedive_domain(ihunt: Ihunt, lock: Lock) -> None:
                 if is_empty(ihunt.data.dns):
                     ihunt.data.dns = d["properties"]["dns"]
     except Exception as e:
-        echo(f"[x] Pulsedive API error: {e}", ihunt.verbose)
+        echo(f"[x] {API_NAME} API error: {e}", ihunt.verbose)
 
-    echo("[*] Finished fetching Pulsedive.", ihunt.verbose)
+    echo(f"[*] Finished fetching {API_NAME}.", ihunt.verbose)
 
 
 # Query: IP
 # Return: Info
 def req_pulsedive_ip(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Fetching Pulsedive...", ihunt.verbose)
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
 
     url = BASE_URL + f"/info.php"
     params = {
@@ -71,6 +72,6 @@ def req_pulsedive_ip(ihunt: Ihunt, lock: Lock) -> None:
                 if is_empty(ihunt.data.dns):
                     ihunt.data.dns = d["properties"]["dns"]
     except Exception as e:
-        echo(f"[x] Pulsedive API error: {e}", ihunt.verbose)
+        echo(f"[x] {API_NAME} API error: {e}", ihunt.verbose)
 
-    echo("[*] Finished fetching Pulsedive.", ihunt.verbose)
+    echo(f"[*] Finished fetching {API_NAME}.", ihunt.verbose)

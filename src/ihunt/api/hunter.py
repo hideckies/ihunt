@@ -6,13 +6,14 @@ from ..models import Ihunt
 from ..stdout import echo
 from ..utils import is_empty
 
+API_NAME = "Hunter"
 BASE_URL = "https://api.hunter.io/v2"
 
 
 # Query: Domain
 # Return: Info
 def req_hunter_domain(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Fetching Hunter...", ihunt.verbose)
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
 
     url = BASE_URL + f"/domain-search"
     params = {
@@ -68,7 +69,7 @@ def req_hunter_domain(ihunt: Ihunt, lock: Lock) -> None:
 # Query: Email
 # Return: Verification
 def req_hunter_email(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Fetching Hunter...", ihunt.verbose)
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
 
     url = BASE_URL + f"/email-verifier"
     params = {
@@ -99,6 +100,6 @@ def req_hunter_email(ihunt: Ihunt, lock: Lock) -> None:
                 if is_empty(ihunt.data.block):
                     ihunt.data.block = d["block"]
     except Exception as e:
-        echo("[x] Hunter API error: {e}", ihunt.verbose)
+        echo(f"[x] {API_NAME} API error: {e}", ihunt.verbose)
 
-    echo("[*] Finished fetching Hunter.", ihunt.verbose)
+    echo(f"[*] Finished fetching {API_NAME}.", ihunt.verbose)

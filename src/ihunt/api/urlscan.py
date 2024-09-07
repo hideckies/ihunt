@@ -1,8 +1,8 @@
-# # Docs: https://urlscan.io/docs/api/
+# Docs: https://urlscan.io/docs/api/
 
 import requests
 
-# BASE_URL = "https://urlscan.io/api/v1/search"
+BASE_URL = "https://urlscan.io/api/v1/search"
 
 
 # # Query: Domain

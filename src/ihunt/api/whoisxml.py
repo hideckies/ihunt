@@ -6,13 +6,14 @@ from ..models import Ihunt
 from ..stdout import echo
 from ..utils import is_empty
 
+API_NAME = "WhoisXML"
 BASE_URL = "https://www.whoisxmlapi.com/whoisserver/WhoisService"
 
 
 # Query: Domain
 # Return: Info
 def req_whoisxml_domain(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Fetching WhoisXML...", ihunt.verbose)
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
 
     url = BASE_URL
     headers = {
@@ -70,6 +71,6 @@ def req_whoisxml_domain(ihunt: Ihunt, lock: Lock) -> None:
                 if is_empty(ihunt.data.name_servers):
                     ihunt.data.name_servers = d["nameServers"]["hostNames"]
     except Exception as e:
-        echo(f"[x] WhoisXML API error: {e}", ihunt.verbose)
+        echo(f"[x] {API_NAME} API error: {e}", ihunt.verbose)
 
-    echo("[*] Finished fetching WhoisXML...", ihunt.verbose)
+    echo(f"[*] Finished fetching {API_NAME}...", ihunt.verbose)

@@ -6,13 +6,14 @@ from ..models import Ihunt
 from ..stdout import echo
 from ..utils import is_empty
 
+API_NAME = "IPAPI"
 BASE_URL = "https://ipapi.co"
 
 
 # Query: IP
 # Return: Info
 def req_ipapi_ip(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Fetching IPAPI...", ihunt.verbose)
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
 
     url = BASE_URL + f"/{ihunt.query.value}/json/"
 
@@ -54,6 +55,6 @@ def req_ipapi_ip(ihunt: Ihunt, lock: Lock) -> None:
                 if is_empty(ihunt.data.organization):
                     ihunt.data.organization = d["org"]
     except Exception as e:
-        echo(f"[x] IPAPI API error: {e}", ihunt.verbose)
+        echo(f"[x] {API_NAME} API error: {e}", ihunt.verbose)
 
-    echo("[*] Finished fetching IPAPI.", ihunt.verbose)
+    echo(f"[*] Finished fetching {API_NAME}.", ihunt.verbose)

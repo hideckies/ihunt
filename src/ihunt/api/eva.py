@@ -6,12 +6,13 @@ from ..models import Ihunt
 from ..stdout import echo
 from ..utils import is_empty
 
+API_NAME = "EVA"
 BASE_URL = "https://api.eva.pingutil.com/email"
 
 # Query: Email
 # Return: Verification
 def req_eva_email(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Fetching EVA...", ihunt.verbose)
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
 
     url = BASE_URL
     params = {
@@ -39,6 +40,6 @@ def req_eva_email(ihunt: Ihunt, lock: Lock) -> None:
                         ihunt.data.spam = data["spam"]
                     return
     except Exception as e:
-        echo(f"[x] EVA API error: {e}", ihunt.verbose)
+        echo(f"[x] {API_NAME} API error: {e}", ihunt.verbose)
 
-    echo("[*] Finished fetching EVA.", ihunt.verbose)
+    echo(f"[*] Finished fetching {API_NAME}.", ihunt.verbose)

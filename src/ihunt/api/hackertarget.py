@@ -6,13 +6,14 @@ from ..models import Ihunt
 from ..stdout import echo
 from ..utils import is_empty
 
+API_NAME = "HackerTarget"
 BASE_URL = "https://api.hackertarget.com/hostsearch"
 
 
 # Query: Domain
 # Return: Subdomains, IPs
 def req_hackertarget_domain(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Fetching HackerTarget...", ihunt.verbose)
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
 
     url = BASE_URL + f"/?q={ihunt.query.value}"
 
@@ -37,6 +38,6 @@ def req_hackertarget_domain(ihunt: Ihunt, lock: Lock) -> None:
                             if spl[1] not in ihunt.data.ips:
                                 ihunt.data.ips.append(spl[1])
     except Exception as e:
-        echo(f"[x] HackerTarget API error: {e}", ihunt.verbose)
+        echo(f"[x] {API_NAME} API error: {e}", ihunt.verbose)
 
-    echo("[*] Finished fetching HackerTarget.", ihunt.verbose)
+    echo(f"[*] Finished fetching {API_NAME}.", ihunt.verbose)

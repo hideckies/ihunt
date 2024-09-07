@@ -6,13 +6,15 @@ from ..models import Ihunt
 from ..stdout import echo
 from ..utils import is_empty
 
+API_NAME = "Emailrep"
 BASE_URL = "https://emailrep.io"
+
 
 # TODO: The API key is not approved yet on https://emailrep.io/, so I can't implement the function.
 # Query: Email
 # Return: Info
 def req_emailrep_email(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Fetching Emailrep...", ihunt.verbose)
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
 
     url = BASE_URL + f"/{ihunt.query.value}"
 
@@ -63,6 +65,6 @@ def req_emailrep_email(ihunt: Ihunt, lock: Lock) -> None:
                 if is_empty(ihunt.data.data_breach):
                     ihunt.data.data_breach = d["details"]["data_breach"]
     except Exception as e:
-        echo(f"[x] Emailrep API error: {e}", ihunt.verbose)
+        echo(f"[x] {API_NAME} API error: {e}", ihunt.verbose)
 
-    echo("[*] Finished fetching Emailrep...", ihunt.verbose)
+    echo(f"[*] Finished fetching {API_NAME}.", ihunt.verbose)

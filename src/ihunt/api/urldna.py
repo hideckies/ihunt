@@ -8,13 +8,14 @@ from ..models import Ihunt
 from ..stdout import echo
 from ..utils import is_empty
 
+API_NAME = "urlDNA"
 BASE_URL = "https://api.urldna.io/scan"
 
 
 # Query: URL
 # Return: Info
 def req_urldna_url(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Fetching urlDNA...", ihunt.verbose)
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
 
     url = BASE_URL
     headers = {
@@ -98,6 +99,6 @@ def req_urldna_url(ihunt: Ihunt, lock: Lock) -> None:
                         ihunt.data.technologies = d["technologies"]
                     break
     except Exception as e:
-        echo(f"[x] urlDNA API error: {e}", ihunt.verbose)
+        echo(f"[x] {API_NAME} API error: {e}", ihunt.verbose)
 
-    echo("[*] Finished fetching urlDNA.", ihunt.verbose)
+    echo(f"[*] Finished fetching {API_NAME}.", ihunt.verbose)

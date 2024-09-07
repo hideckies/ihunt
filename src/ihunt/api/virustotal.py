@@ -8,13 +8,14 @@ from ..models import Ihunt
 from ..stdout import echo
 from ..utils import is_empty
 
+API_NAME = "VirusTotal"
 BASE_URL = "https://www.virustotal.com/api/v3"
 
 
 # Query: Domain
 # Return: Info
 def req_virustotal_domain(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Fetching VirusTotal...", ihunt.verbose)
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
 
     url = BASE_URL + f"/domains/{ihunt.query.value}"
     headers = {
@@ -44,15 +45,15 @@ def req_virustotal_domain(ihunt: Ihunt, lock: Lock) -> None:
                 if is_empty(ihunt.data.https_cert_signature):
                     ihunt.data.https_cert_signature = d["attributes"]["last_https_certificate"]["cert_signature"]["signature"]
     except Exception as e:
-        echo(f"[x] VirusTotal API error: {e}", ihunt.verbose)
+        echo(f"[x] {API_NAME} API error: {e}", ihunt.verbose)
 
-    echo("[*] Finished fetching VirusTotal.", ihunt.verbose)
+    echo(f"[*] Finished fetching {API_NAME}.", ihunt.verbose)
 
 
 # Query: Hash
 # Return: Info
 def req_virustotal_hash(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Fetching VirusTotal...", ihunt.verbose)
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
 
     url = BASE_URL + f"/files/{ihunt.query.value}"
     headers = {
@@ -114,15 +115,15 @@ def req_virustotal_hash(ihunt: Ihunt, lock: Lock) -> None:
                 if is_empty(ihunt.data.https_cert_signature):
                     ihunt.data.https_cert_signature = d["attributes"]["last_https_certificate"]["cert_signature"]["signature"]
     except Exception as e:
-        echo(f"[x] VirusTotal API error: {e}", ihunt.verbose)
+        echo(f"[x] {API_NAME} API error: {e}", ihunt.verbose)
 
-    echo("[*] Finished fetching VirusTotal.", ihunt.verbose)
+    echo(f"[*] Finished fetching {API_NAME}.", ihunt.verbose)
 
 
 # Query: IP
 # Return: Info
 def req_virustotal_ip(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Fetching VirusTotal...", ihunt.verbose)
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
 
     url = BASE_URL + f"/ip_addresses/{ihunt.query.value}"
     headers = {
@@ -158,15 +159,15 @@ def req_virustotal_ip(ihunt: Ihunt, lock: Lock) -> None:
                 if is_empty(ihunt.data.https_cert_signature):
                     ihunt.data.https_cert_signature = d["attributes"]["last_https_certificate"]["cert_signature"]["signature"]
     except Exception as e:
-        echo(f"[x] VirusTotal API error: {e}", ihunt.verbose)
+        echo(f"[x] {API_NAME} API error: {e}", ihunt.verbose)
 
-    echo("[*] Finished fetching VirusTotal.", ihunt.verbose)
+    echo(f"[*] Finished fetching {API_NAME}.", ihunt.verbose)
 
 
 # Query: URL
 # Return: Info
 def req_virustotal_url(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Fetching VirusTotal...", ihunt.verbose)
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
 
     target_url = urllib.parse.quote(base64.b64encode(ihunt.query.value.encode('utf-8')).decode('utf-8'))
 
@@ -194,6 +195,6 @@ def req_virustotal_url(ihunt: Ihunt, lock: Lock) -> None:
                 if is_empty(ihunt.data.virustotal_threat_names):
                     ihunt.data.virustotal_threat_names = d["attributes"]["threat_names"]
     except Exception as e:
-        echo(f"[x] VirusTotal API error {e}", ihunt.verbose)
+        echo(f"[x] {API_NAME} API error {e}", ihunt.verbose)
 
-    echo("[*] finished fetching VirusTotal.", ihunt.verbose)
+    echo(f"[*] finished fetching {API_NAME}.", ihunt.verbose)

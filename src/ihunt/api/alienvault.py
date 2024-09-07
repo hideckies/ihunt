@@ -6,13 +6,14 @@ from ..models import Ihunt
 from ..stdout import echo
 from ..utils import is_empty, is_ip_address
 
+API_NAME = "AlienVaule"
 BASE_URL = "https://otx.alienvault.com/api/v1/indicators/domain"
 
 
 # Query: Domain
 # Return: Subdomains
 def req_alienvalut_domain(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Fetching AlienVault...", ihunt.verbose)
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
 
     url = BASE_URL + f"/{ihunt.query.value}/passive_dns"
 
@@ -35,7 +36,7 @@ def req_alienvalut_domain(ihunt: Ihunt, lock: Lock) -> None:
                             if d["hostname"] not in ihunt.data.subdomains:
                                 ihunt.data.subdomains.append(d["hostname"])
     except Exception as e:
-        echo(f"[x] AlienVault API error: {e}", ihunt.verbose)
+        echo(f"[x] {API_NAME} API error: {e}", ihunt.verbose)
 
-    echo("[*] Finished fetching AlienVault.", ihunt.verbose)
+    echo(f"[*] Finished fetching {API_NAME}.", ihunt.verbose)
         

@@ -1,4 +1,4 @@
-# Docs: https://github.com/jonluca/anubis
+# Docs: https://github.com/ARPSyndicate/docs?tab=readme-ov-file#subdomain-center
 
 import requests
 from threading import Lock
@@ -6,15 +6,16 @@ from ..models import Ihunt
 from ..stdout import echo
 from ..utils import is_empty
 
-BASE_URL = "https://jonlu.ca/anubis/subdomains"
+API_NAME = "SubdomainCenter"
+BASE_URL = "https://api.subdomain.center/?domain=google.com"
 
 
 # Query: Domain
 # Return: Subdomains
-def req_anubis_domain(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Fetching Anubis...", ihunt.verbose)
+def req_subdomaincenter_domain(ihunt: Ihunt, lock: Lock) -> None:
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
 
-    url = BASE_URL + f"/{ihunt.query.value}"
+    url = BASE_URL + f"/?domain={ihunt}"
 
     try:
         resp = requests.get(url, timeout=ihunt.timeout)
@@ -28,6 +29,6 @@ def req_anubis_domain(ihunt: Ihunt, lock: Lock) -> None:
                         if subdomain not in ihunt.data.subdomains:
                             ihunt.data.subdomains.append(subdomain)
     except Exception as e:
-        echo(f"[x] Anubis API error: {e}", ihunt.verbose)
+        echo(f"[x] {API_NAME} API error: {e}", ihunt.verbose)
 
-    echo("[*] Finished fetching Anubis...", ihunt.verbose)
+    echo(f"[*] Finished fetching {API_NAME}...", ihunt.verbose)

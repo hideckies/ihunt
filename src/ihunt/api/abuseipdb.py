@@ -5,13 +5,14 @@ from threading import Lock
 from ..models import Ihunt
 from ..stdout import echo
 
+API_NAME = "AbuseIPDB"
 BASE_URL = "https://api.abuseipdb.com/api/v2"
 
 
 # Query: IP
 # Return: Info
 def req_abuseipdb_ip(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Fetching AbuseIPDB...", ihunt.verbose)
+    echo(f"[*] Fetching {API_NAME}...", ihunt.verbose)
 
     url = BASE_URL + "/check"
 
@@ -49,6 +50,6 @@ def req_abuseipdb_ip(ihunt: Ihunt, lock: Lock) -> None:
                 if ihunt.data.is_tor is None:
                     ihunt.data.is_tor = d["isTor"]
     except Exception as e:
-        echo(f"[x] AbuseIPDB API error: {e}", ihunt.verbose)
+        echo(f"[x] {API_NAME} API error: {e}", ihunt.verbose)
 
-    echo("[*] Fishined fetching AbuseIPDB.", ihunt.verbose)
+    echo(f"[*] Fishined fetching {API_NAME}.", ihunt.verbose)
