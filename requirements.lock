@@ -26,6 +26,8 @@ charset-normalizer==3.3.2
 click==8.1.7
     # via duckduckgo-search
     # via ihunt
+colorama==0.4.6
+    # via ihunt
 distro==1.9.0
     # via groq
 duckduckgo-search==6.2.9

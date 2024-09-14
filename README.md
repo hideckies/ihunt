@@ -9,7 +9,14 @@ Information gathering tool that collects information using OSINT and AI, while r
 The most easiest way is to install the Python package with `pip`.
 
 ```sh
+pipx install ihunt
+# or
 pip install ihunt
+```
+
+After installing, run the following command to show the usage:
+
+```sh
 ihunt --help
 ```
 

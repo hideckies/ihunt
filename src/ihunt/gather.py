@@ -31,7 +31,7 @@ from .models import (
     DataUrl,
     Ihunt,
 )
-from .stdout import echo
+from .stdout import echo, spinner
 
 lock = threading.Lock()
 
@@ -402,6 +402,11 @@ def gather_url(ihunt: Ihunt) -> None:
 def gather(ihunt: Ihunt) -> None:
     echo("[*] Start gathering information...", ihunt.verbose)
 
+    done = threading.Event()
+
+    t = threading.Thread(target=spinner, args=(done,"Gathering..."))
+    t.start()
+
     if ihunt.query.type == QueryType.DOMAIN:
         gather_domain(ihunt)
     elif ihunt.query.type == QueryType.EMAIL:
@@ -420,5 +425,9 @@ def gather(ihunt: Ihunt) -> None:
         gather_phone(ihunt)
     elif ihunt.query.type == QueryType.UNKNOWN:
         echo("[x] Query Type Unknown", ihunt.verbose)
+
+    done.set()
+
+    t.join()
 
     echo("[*] Fished gathering.", ihunt.verbose)
