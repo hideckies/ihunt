@@ -20,16 +20,15 @@ After installing, run the following command to show the usage:
 ihunt --help
 ```
 
-### Option 2. Using Rye
+### Option 2. Using `uv`
 
 If you want to use the latest features (but unstable), clone the repository and run the following command.  
-Assuming that you've already installed the [Rye](https://github.com/astral-sh/rye) project manager.
+Assuming that you've already installed the [uv](https://github.com/astral-sh/uv) package manager.
 
 ```sh
 git clone https://github.com/hideckies/ihunt.git
 cd ihunt
-rye sync
-rye run ihunt --help
+uv run ihunt --help
 ```
 
 <br />

@@ -4,9 +4,8 @@ import os
 import re
 from .gather import gather
 from .models import Ihunt
-from .querytype import identify_querytype, Query, QueryType
-from .version import print_version
-
+from .querytype import Query, QueryType
+from .version import VERSION
 
 @click.command()
 @click.option('-c', '--config', help='Config file.')
@@ -15,7 +14,7 @@ from .version import print_version
 @click.option('-t', '--timeout', default=10, help='Timeout for fetching APIs.')
 @click.option('-u', '--user-agent', default='ihunt', help='Custome User-Agent used when fetching APIs')
 @click.option('-v', '--verbose', is_flag=True, help='Verbose output.')
-@click.option('--version', is_flag=True, callback=print_version, expose_value=False, is_eager=True, help='The version of the Ihunt.')
+@click.version_option(VERSION, prog_name="ihunt")
 @click.argument('query')
 def run(config: str, format: str, output: str, timeout: int, user_agent: str, verbose: bool, query: str) -> None:
     if config is not None:
