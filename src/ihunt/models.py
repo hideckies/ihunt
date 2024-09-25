@@ -18,12 +18,9 @@ class ApiKeys:
     gemini: str | None = None
     groq: str | None = None
     haveibeenpwned: str | None = None
-    huggingface: str | None = None
     hunter: str | None = None
     pulsedive: str | None = None
-    shodan: str | None = None
     urldna: str | None = None
-    urlscan: str | None = None
     virustotal: str | None = None
     whoisxml: str | None = None
 
@@ -347,12 +344,9 @@ class Ihunt:
             emailrep=os.getenv("IHUNT_APIKEY_EMAILREP"),
             gemini=os.getenv("IHUNT_APIKEY_GEMINI"),
             groq=os.getenv("IHUNT_APIKEY_GROQ"),
-            huggingface=os.getenv("IHUNT_APIKEY_HUGGINGFACE"),
             hunter=os.getenv("IHUNT_APIKEY_HUNTER"),
             pulsedive=os.getenv("IHUNT_APIKEY_PULSEDIVE"),
-            shodan=os.getenv("IHUNT_APIKEY_SHODAN"),
             urldna=os.getenv("IHUNT_APIKEY_URLDNA"),
-            urlscan=os.getenv("IHUNT_APIKEY_URLSCAN"),
             virustotal=os.getenv("IHUNT_APIKEY_VIRUSTOTAL"),
             whoisxml=os.getenv("IHUNT_APIKEY_WHOISXML"),
         )

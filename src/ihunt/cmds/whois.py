@@ -4,16 +4,17 @@ from ..models import Ihunt
 from ..stdout import echo
 from ..utils import is_empty
 
+CMD = "whois"
+
 
 # Query: Domain
 # Return: Info
 def exec_whois_domain(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Executing whois command...", ihunt.verbose)
-
-    result = subprocess.run(['whois', ihunt.query.value], capture_output=True, text=True)
-    lines = result.stdout.splitlines()
+    echo(f"[*] Executing {CMD} command...", ihunt.verbose)
 
     try:
+        result = subprocess.run([CMD, ihunt.query.value], capture_output=True, text=True)
+        lines = result.stdout.splitlines()
         with lock:
             for line in lines:
                 if ':' not in line:
@@ -106,20 +107,19 @@ def exec_whois_domain(ihunt: Ihunt, lock: Lock) -> None:
                 if key == "DNSSEC":
                     ihunt.data.dnssec = val
     except Exception as e:
-        echo(f"[x] whois command error: {e}", ihunt.verbose)
+        echo(f"[x] {CMD} command error: {e}", ihunt.verbose)
 
-    echo("[*] Finished executing whois command.", ihunt.verbose)
+    echo("[*] Finished executing {CMD} command.", ihunt.verbose)
 
 
 # Query: IP
 # Return: Info
 def exec_whois_ip(ihunt: Ihunt, lock: Lock) -> None:
-    echo("[*] Executing whois command...", ihunt.verbose)
-
-    result = subprocess.run(['whois', ihunt.query.value], capture_output=True, text=True)
-    lines = result.stdout.splitlines()
+    echo(f"[*] Executing {CMD} command...", ihunt.verbose)
 
     try:
+        result = subprocess.run([CMD, ihunt.query.value], capture_output=True, text=True)
+        lines = result.stdout.splitlines()
         with lock:
             for line in lines:
                 if ':' not in line or '%' in line:
@@ -137,7 +137,7 @@ def exec_whois_ip(ihunt: Ihunt, lock: Lock) -> None:
                     if is_empty(ihunt.data.net_admin_handle):
                         ihunt.data.net_admin_handle = val
                     # Additional information for the admin-c
-                    result = subprocess.run(['whois', val], capture_output=True, text=True)
+                    result = subprocess.run([CMD, val], capture_output=True, text=True)
                     lines_2 = result.stdout.splitlines()
                     for line_2 in lines_2:
                         if ':' not in line_2 or '%' in line_2:
@@ -154,7 +154,7 @@ def exec_whois_ip(ihunt: Ihunt, lock: Lock) -> None:
                     if is_empty(ihunt.data.net_tech_handle):
                         ihunt.data.net_tech_handle = val
                     # Additional information for the tech-c
-                    result = subprocess.run(['whois', val], capture_output=True, text=True)
+                    result = subprocess.run([CMD, val], capture_output=True, text=True)
                     line_2 = result.stdout.splitlines()
 
                     for line_2 in lines_2:
@@ -169,6 +169,6 @@ def exec_whois_ip(ihunt: Ihunt, lock: Lock) -> None:
                             else:
                                 ihunt.data.net_tech_persons.append(val_2)
     except Exception as e:
-        echo(f"[x] whois command error: {e}", ihunt.verbose)
+        echo(f"[x] {CMD} command error: {e}", ihunt.verbose)
 
-    echo("[*] Finished executing whois command.", ihunt.verbose)
+    echo(f"[*] Finished executing {CMD} command.", ihunt.verbose)
