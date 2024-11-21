@@ -13,7 +13,7 @@ from .version import VERSION
 @click.option('-f', '--format', type=click.Choice(['json', 'pretty', 'yaml']), default='json', help='Print format.')
 @click.option('-o', '--output', help='Write results to the output file path.')
 @click.option('-t', '--timeout', default=10, help='Timeout for fetching APIs.')
-@click.option('-u', '--user-agent', default='ihunt', help='Custome User-Agent used when fetching APIs')
+@click.option('-u', '--user-agent', default='ihunt (https://github.com/hideckies/ihunt)', help='Custome User-Agent used when fetching APIs')
 @click.option('-v', '--verbose', is_flag=True, help='Verbose output.')
 @click.version_option(VERSION, prog_name="ihunt")
 @click.argument('query')

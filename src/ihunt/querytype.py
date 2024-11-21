@@ -1,7 +1,8 @@
 from duckduckgo_search import DDGS
 from enum import Enum
 import re
-from .stdout import echo
+import threading
+from .stdout import echo, spinner
 from .utils import is_ip_address
 
 
@@ -49,22 +50,39 @@ Unknown
 def identify_querytype(query: str, verbose: bool) -> QueryType:
     echo("[*] Identifying the query type...", verbose)
 
+    done = threading.Event()
+
+    t = threading.Thread(target=spinner, args=(done, "Identifying the query type..."))
+    t.start()
+
     # If it was not detected by DuckDuckGo, try programatically resolutions.
     domain_pattern = re.compile(r'^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\.)?(?!-)[A-Za-z0-9-]{1,63}(?<!-)\.(?!-)[A-Za-z0-9-]{1,63}(?<!-)$')
     email_pattern = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
     url_pattern = re.compile(r'^(https?|ftp|ssh)://[^\s/$.?#].[^\s]*$', re.IGNORECASE)
 
     if domain_pattern.match(query):
+        done.set()
+        t.join()
         return QueryType.DOMAIN
     elif email_pattern.match(query):
+        done.set()
+        t.join()
         return QueryType.EMAIL
     elif is_ip_address(query):
+        done.set()
+        t.join()
         return QueryType.IP
     elif url_pattern.match(query):
+        done.set()
+        t.join()
         return QueryType.URL
     
     # Try DuckDuckGo Chat API.
     query_type = identify_querytype_with_duckduckgo(query, verbose)
+
+    done.set()
+    t.join()
+
     return query_type
 
 

@@ -1,5 +1,5 @@
 import click
-from colorama import Fore, Style, init
+from colorama import Fore, Style
 import itertools
 import sys
 from threading import Event
